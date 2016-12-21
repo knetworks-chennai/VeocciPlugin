@@ -1,7 +1,7 @@
 var exec = require('cordova/exec');
 
-exports.addPolygon = function(arg0, success, error) {
-    exec(success, error, "RIWS", "addPolygon", [arg0]);
+exports.addPolygon = function(success, error, replaceifexist, polygon) {
+    exec(success, error, "RIWS", "addPolygon", [replaceifexist, polygon]);
 };
 
 exports.clearPolygon = function(arg0, success, error) {

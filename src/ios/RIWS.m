@@ -8,7 +8,7 @@
 @property(nonatomic,strong)CDVInvokedUrlCommand *eventCommand;
 @property(nonatomic,retain)NSTimer *timer;
 
-- (void)addPolygon:(CDVInvokedUrlCommand*)command;
+-(void)addPolygon:(CDVInvokedUrlCommand*)command;
 -(void)clearPolygon:(CDVInvokedUrlCommand*)command;
 -(void)RIWSAlert:(CDVInvokedUrlCommand*)command;
 @end
@@ -19,7 +19,11 @@
 {
     CDVPluginResult* pluginResult = nil;
     NSString* echo = @"Add Polygon Called";
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+    if ([command.arguments count]<2) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:echo];
+    }else{
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+    }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
