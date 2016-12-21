@@ -4,10 +4,14 @@ exports.addPolygon = function(success, error, replaceifexist, polygon) {
     exec(success, error, "RIWS", "addPolygon", [replaceifexist, polygon]);
 };
 
-exports.clearPolygon = function(arg0, success, error) {
-    exec(success, error, "RIWS", "clearPolygon", [arg0]);
+exports.removePolygon = function(success, error, polygon) {
+    exec(success, error, "RIWS", "removePolygon", [polygon]);
 };
 
-exports.RIWSAlert = function(arg0, success, error) {
-    exec(success, error, "RIWS", "RIWSAlert", [arg0]);
+exports.removeAll = function(success, error) {
+    exec(success, error, "RIWS", "removeAll", []);
+};
+
+exports.initRIWS = function(onRunwayIncursion, onEndRunwayIncursion, error) {
+    exec(onRunwayIncursion, onEndRunwayIncursion, "RIWS", "initRIWS", [error]);
 };
