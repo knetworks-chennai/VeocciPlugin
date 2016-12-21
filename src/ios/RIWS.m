@@ -31,7 +31,7 @@
 -(void)removePolygon:(CDVInvokedUrlCommand*)command{
     CDVPluginResult* pluginResult = nil;
     NSString* echo = @"Successfully removed polygon";
-    if ([command.arguments count]<2) {
+    if ([command.arguments count]<1) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while removing polygon"];
     }else{
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
@@ -54,7 +54,7 @@
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
     CDVPluginResult* pluginResult = nil;
     NSDictionary *incrusion = @{
-                             @"IncursionEventID" : @"guid"
+                             @"IncursionEventID" : @"guid",
                              @"IncursionText" : @"Vehicle is inside Test Polygon",
                              @"TextColor" : @"ff12de",
                              @"AudioFile" : @"1.mp3"
@@ -74,7 +74,7 @@
 
 -(void)onIncrusion:(NSTimer *)timer {
     NSDictionary *incrusion = @{
-                                @"IncursionEventID" : @"guid"
+                                @"IncursionEventID" : @"guid",
                                 @"IncursionText" : @"Vehicle is inside Test Polygon",
                                 @"TextColor" : @"ff12de",
                                 @"AudioFile" : @"1.mp3"
@@ -90,7 +90,7 @@
 
 -(void)onIncrusionEnd:(NSTimer *)timer {
     NSDictionary *incrusion = @{
-                                @"IncursionEventID" : @"guid"
+                                @"IncursionEventID" : @"guid",
                                 @"IncursionText" : @"Vehicle is inside Test Polygon",
                                 @"TextColor" : @"ff12de",
                                 @"AudioFile" : @"1.mp3"
