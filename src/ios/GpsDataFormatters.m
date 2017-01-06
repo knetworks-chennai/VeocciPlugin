@@ -21,27 +21,8 @@
  *
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <BEAPSDK/BEBadElfAccessoryProtocol.h>
-
-@interface GpsDataFormatters : NSObject
-
-@property (nonatomic, strong) NSNumberFormatter *locationFormatter;
-
-- (BOOL) validLocation: (id<BEGpsLocation>) location;
-- (NSString *) formatDegree: (double) degrees direction: (NSString *) direction degreeFormat: (int) degreeFormat;
-- (NSString *) latitudeStringFromDegree: (double) degrees;
-- (NSString *) longitudeStringFromDegree: (double) degrees;
-- (NSString *) latitudeStringFromDegree: (double) degrees degreeFormat: (int) degreeFormat;
-- (NSString *) longitudeStringFromDegree: (double) degrees degreeFormat: (int) degreeFormat;
-- (NSString *) gpsLockFromLocation: (id<BEGpsLocation>) location;
-- (NSString *) stringDateFromLocation: (id<BEGpsLocation>) location;
-
-@end
-
 #import "GpsDataFormatters.h"
-#import "SimpleBadElfGpsManager.h"
-#import <CoreLocation/CoreLocation.h>
+
 
 @implementation GpsDataFormatters
 

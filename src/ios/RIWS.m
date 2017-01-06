@@ -1,10 +1,9 @@
 /********* RIWS.m Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import <BEAPSDK/BEBadElfAccessoryProtocol.h>
-#import "SimpleBadElfGpsManager.h"
-#import "GpsDataFormatters.h"
 #import <CoreLocation/CoreLocation.h>
+#import "GpsDataFormatters.h"
+
 
 @interface RIWS : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate>{
     int cnt;
