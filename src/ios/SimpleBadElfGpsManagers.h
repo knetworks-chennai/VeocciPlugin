@@ -99,12 +99,12 @@
  
  */
 
-@interface SimpleBadElfGpsManager : NSObject<BEAccessoryManagerDelegate, BEGpsAccessoryDelegate>
+@interface SimpleBadElfGpsManagers : NSObject<BEAccessoryManagerDelegate, BEGpsAccessoryDelegate>
 
 /**
  Singleton object for the GPS Manager class
  **/
-+ (SimpleBadElfGpsManager *)sharedGpsManager; // Singleton Instance for GPS Manager
++ (SimpleBadElfGpsManagers *)sharedGpsManager; // Singleton Instance for GPS Manager
 /**
  An array of detected Bad Elf GPS devices
  **/
@@ -137,12 +137,12 @@
  Weather the GPS Device is currently logging
  @warning *Only supported on the BE-GPS-2200
  **/
-@property (nonatomic) BOOL logging;
+@property (nonatomic) BOOL logging1;
 /**
  An array of the logs found on the GPS Device
  @warning *Only supported on the BE-GPS-2200
  **/
-@property (nonatomic, strong) NSArray *logListData;
+@property (nonatomic, strong) NSArray *logListData1;
 
 ///---------------------------
 /// @name Starting and Stopping GPS Device detection

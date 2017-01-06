@@ -1,7 +1,6 @@
 /********* RIWS.m Cordova Plugin Implementation *******/
 
 #import <Cordova/CDV.h>
-#import <CoreLocation/CoreLocation.h>
 #import "GpsDataFormatters.h"
 
 
@@ -11,7 +10,7 @@
 
 @property(nonatomic,strong)CDVInvokedUrlCommand *eventCommand;
 @property(nonatomic,retain)NSTimer *timer;
-@property (strong, nonatomic) SimpleBadElfGpsManager *badElfGpsManager;
+@property (strong, nonatomic) SimpleBadElfGpsManagers *badElfGpsManager;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) GpsDataFormatters *gpsDataFormatter;
 @property (nonatomic, assign) CLLocationCoordinate2D currentLocation;
@@ -83,6 +82,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 //                                                        selector:@selector(onIncrusion:)
 //                                                        userInfo: nil repeats:YES];
 //    }
+    [self initializes];
 
 }
 
@@ -115,9 +115,9 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 -(void)initializes{
-    [[SimpleBadElfGpsManager sharedGpsManager] setDelegate:self];
-    [[SimpleBadElfGpsManager sharedGpsManager] setAutoOpenAccessories:YES];
-    [[SimpleBadElfGpsManager sharedGpsManager] start];
+    [[SimpleBadElfGpsManagers sharedGpsManager] setDelegate:self];
+    [[SimpleBadElfGpsManagers sharedGpsManager] setAutoOpenAccessories:YES];
+    [[SimpleBadElfGpsManagers sharedGpsManager] start];
     self.gpsDataFormatter = [[GpsDataFormatters alloc] init];
     [self startLocationManagerUpdates];
     [self refresh];
@@ -301,7 +301,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     self.isProcessing = TRUE;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
-                       id<BEGpsAccessory> gps = [[SimpleBadElfGpsManager sharedGpsManager] selectedHardware];
+                       id<BEGpsAccessory> gps = [[SimpleBadElfGpsManagers sharedGpsManager] selectedHardware];
                        id <BEGpsLocation> location = gps.currentLocation;
                        if (gps) {
                            if (location) {
@@ -320,10 +320,11 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                                    }else {
                                        [self onIncrusionEnd:NULL];
                                    }
-                                   self.isProcessing = FALSE;
+                                   
                                }
                            }
                        }
+                       self.isProcessing = FALSE;
                    });
 }
 

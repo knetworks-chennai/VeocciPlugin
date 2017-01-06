@@ -21,16 +21,16 @@
  *
  *************************************************************************/
 
-#import "SimpleBadElfGpsManager.h"
+#import "SimpleBadElfGpsManagers.h"
 
-@interface SimpleBadElfGpsManager()
-@property (nonatomic, strong) BEAccessoryManager *accessoryManager;
-@property (nonatomic, strong) id <BEGpsAccessory> selectedHardwareRaw;
-@property (nonatomic, strong) NSMutableArray *detectedHardwareRaw;
+@interface SimpleBadElfGpsManagers()
+@property (nonatomic, strong) BEAccessoryManager *accessoryManager1;
+@property (nonatomic, strong) id <BEGpsAccessory> selectedHardwareRaw1;
+@property (nonatomic, strong) NSMutableArray *detectedHardwareRaw1;
 @property (nonatomic) BOOL started;
 @end
 
-@implementation SimpleBadElfGpsManager
+@implementation SimpleBadElfGpsManagers
 
 //@synthesize detectedHardwareRaw = _detectedHardwareRaw;
 //@synthesize accessoryManager = _accessoryManager;
@@ -47,9 +47,9 @@
 //@synthesize defaultSatelliteData;
 //@synthesize defaultGpsReportingRate;
 
-+ (SimpleBadElfGpsManager *)sharedGpsManager
++ (SimpleBadElfGpsManagers *)sharedGpsManager
 {
-    static SimpleBadElfGpsManager *sharedGpsManager = nil;
+    static SimpleBadElfGpsManagers *sharedGpsManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedGpsManager = [[self alloc] init];
@@ -65,7 +65,7 @@
         self = [super init];
         self.selectedHardware = nil;
         self.detectedHardware = [NSMutableArray arrayWithCapacity: 3];
-        self.accessoryManager = [BEAccessoryManager new];
+        self.accessoryManager1 = [BEAccessoryManager new];
         self.started = NO;
         self.autoOpenAccessories = YES;
         
@@ -79,12 +79,12 @@
 
 -(void)start {
     self.started = YES;
-    self.accessoryManager.delegate = self;
+    self.accessoryManager1.delegate = self;
     [self reconnectAllExistingAccessories];
 }
 
 -(void)stop {
-    self.accessoryManager.delegate = nil;
+    self.accessoryManager1.delegate = nil;
     self.started = NO;
     [self closeAllAccessories];
 }
@@ -119,8 +119,8 @@
 - (void)accessoryDidDisconnect: (id<BEAccessory>)accessory {
     id<BEGpsAccessory> gpsAccessory = (id<BEGpsAccessory>) accessory;
     gpsAccessory.delegate = nil;
-    if (gpsAccessory == self.selectedHardwareRaw) {
-        self.selectedHardwareRaw = nil;
+    if (gpsAccessory == self.selectedHardwareRaw1) {
+        self.selectedHardwareRaw1 = nil;
     }
     [self removeDetectedAccessory:gpsAccessory];
     [self closeAccessory: gpsAccessory];
@@ -133,7 +133,7 @@
 #pragma mark - Internal Methods
 
 - (void)reconnectAllExistingAccessories {
-    BEAccessoryManager *accessoryManager = self.accessoryManager;
+    BEAccessoryManager *accessoryManager = self.accessoryManager1;
     NSArray *connectedAccessories = accessoryManager.connectedAccessories;
     for (id<BEGpsAccessory> accessory in connectedAccessories) {
         [self accessoryDidConnect:accessory];
@@ -141,7 +141,7 @@
 }
 
 - (NSMutableArray *)detectedHardware {
-    return self.detectedHardwareRaw;
+    return self.detectedHardwareRaw1;
 }
 
 - (void)addDetectedAccessory: (id<BEGpsAccessory>) accessory {
@@ -163,7 +163,7 @@
 }
 
 - (void)setDetectedHardware:(NSMutableArray *)detectedHardware {
-    self.detectedHardwareRaw = [NSMutableArray arrayWithArray: detectedHardware];
+    self.detectedHardwareRaw1 = [NSMutableArray arrayWithArray: detectedHardware];
 }
 
 - (void)closeAllAccessories {
@@ -174,7 +174,7 @@
 }
 
 - (id <BEGpsAccessory>) selectedHardware {
-    id <BEGpsAccessory> selectedHardware = self.selectedHardwareRaw;
+    id <BEGpsAccessory> selectedHardware = self.selectedHardwareRaw1;
     if (selectedHardware == nil) {
         NSArray *detectedHardware = self.detectedHardware;
         if (detectedHardware.count == 0) {
@@ -186,7 +186,7 @@
 }
 
 - (void)setSelectedHardware:(id <BEGpsAccessory>)selectedHardware {
-    self.selectedHardwareRaw = selectedHardware;
+    self.selectedHardwareRaw1 = selectedHardware;
 }
 
 @end

@@ -22,7 +22,7 @@
  *************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "SimpleBadElfGpsManager.h"
+#import "SimpleBadElfGpsManagers.h"
 #import <CoreLocation/CoreLocation.h>
 
 @protocol BEGpsLocation;

@@ -14,8 +14,8 @@
         <source-file src="src/ios/RIWS.m" />
         <header-file src="src/ios/GpsDataFormatters.h" />
         <source-file src="src/ios/GpsDataFormatters.m" />
-        <header-file src="src/ios/SimpleBadElfGpsManager.h" />
-        <source-file src="src/ios/SimpleBadElfGpsManager.m" />
+        <header-file src="src/ios/SimpleBadElfGpsManagers.h" />
+        <source-file src="src/ios/SimpleBadElfGpsManagers.m" />
         <framework src="src/ios/BEAPSDK.framework" custom="true" />
         <framework src="QuartzCore.framework" />
         <framework src="ExternalAccessory.framework" />
