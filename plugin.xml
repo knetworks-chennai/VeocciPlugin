@@ -12,8 +12,15 @@
             </feature>
         </config-file>
         <source-file src="src/ios/RIWS.m" />
+        <header-file src="src/ios/GpsDataFormatters.h" />
         <source-file src="src/ios/GpsDataFormatters.m" />
+        <header-file src="src/ios/SimpleBadElfGpsManager.h" />
         <source-file src="src/ios/SimpleBadElfGpsManager.m" />
         <framework src="src/ios/BEAPSDK.framework" custom="true" />
+        <framework src="QuartzCore.framework" />
+        <framework src="ExternalAccessory.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="CFNetwork.framework"/>
+        <framework src="CoreLocation.framework" />
     </platform>
 </plugin>
