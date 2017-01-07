@@ -4,7 +4,7 @@
 #import "GpsDataFormatters.h"
 
 
-@interface RIWS : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate>{
+@interface riws : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate>{
     int cnt;
 }
 
@@ -24,7 +24,7 @@
 -(void)initRIWS:(CDVInvokedUrlCommand*)command;
 @end
 
-@implementation RIWS
+@implementation riws
 
 double DegreesToRadians(double degrees) {return degrees * M_PI / 180;};
 double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
