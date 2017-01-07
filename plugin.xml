@@ -11,6 +11,11 @@
                 <param name="ios-package" value="riws" />
             </feature>
         </config-file>
+        <config-file target="*-Info.plist" parent="UISupportedExternalAccessoryProtocols">
+    		<array>
+        		<string>com.bad-elf.gps</string>
+    		</array>
+		</config-file>
         <source-file src="src/ios/riws.m" />
         <header-file src="src/ios/GpsDataFormatters.h" />
         <source-file src="src/ios/GpsDataFormatters.m" />
