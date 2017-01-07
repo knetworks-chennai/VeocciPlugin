@@ -2,14 +2,14 @@
 
 #import <Cordova/CDV.h>
 #import "GpsDataFormatters.h"
+#import <RIWSFramework/RIWSFramework.h>
 
 
-@interface riws : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate>{
-    int cnt;
+@interface riws : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate,RIWSDelegate>{
+    
 }
 
 @property(nonatomic,strong)CDVInvokedUrlCommand *eventCommand;
-@property(nonatomic,retain)NSTimer *timer;
 @property (strong, nonatomic) SimpleBadElfGpsManagers *badElfGpsManager;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) GpsDataFormatters *gpsDataFormatter;
@@ -17,6 +17,7 @@
 @property (nonatomic, assign) double speed;
 @property (nonatomic, assign) double heading;
 @property (nonatomic, assign) BOOL isProcessing;
+@property (nonatomic, retain) NSString* lastRemovedID;
 
 -(void)addPolygon:(CDVInvokedUrlCommand*)command;
 -(void)removePolygon:(CDVInvokedUrlCommand*)command;
@@ -33,11 +34,18 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 {
     CDVPluginResult* pluginResult = nil;
     NSString* echo = @"Successfully added polygon";
-    if ([command.arguments count]<3) {
+    if ([command.arguments count]<4) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while adding polygon"];
     }else{
-        
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        BOOL canForceReplace = [[command.arguments objectAtIndex:0]boolValue];
+        NSString *coordinates = [command.arguments objectAtIndex:1];
+        NSString *polygonGuid = [command.arguments objectAtIndex:2];
+        NSString *polygonName = [command.arguments objectAtIndex:3];
+        if([[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace]){
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        }else{
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while adding polygon"];
+        }
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -48,7 +56,12 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     if ([command.arguments count]<1) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while removing polygon"];
     }else{
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        NSString *polygonGuid = [command.arguments objectAtIndex:0];
+        if([[RIWS sharedManager]removePolygon:polygonGuid]){
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        }else{
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while removing polygon"];
+        }
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -60,59 +73,20 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     if (error) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while removing some or all polygon"];
     }else{
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        if([[RIWS sharedManager]removeAllPolygons]){
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+        }else{
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while removing some or all polygon"];
+        }
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
-    CDVPluginResult* pluginResult = nil;
-    NSDictionary *incrusion = @{
-                             @"IncursionEventID" : @"guid",
-                             @"IncursionText" : @"Vehicle is inside Test Polygon",
-                             @"TextColor" : @"ff12de",
-                             @"AudioFile" : @"1.mp3"
-                             };
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:incrusion];
-    [pluginResult setKeepCallbackAsBool:TRUE];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     self.eventCommand = command;
-//    if (![self.timer isValid]) {
-//        self.timer = [NSTimer scheduledTimerWithTimeInterval: 60.0
-//                                                          target: self
-//                                                        selector:@selector(onIncrusion:)
-//                                                        userInfo: nil repeats:YES];
-//    }
+    [[RIWS sharedManager]setDelegate:self];
     [self initializes];
-
-}
-
--(void)onIncrusion:(NSTimer *)timer {
-    NSDictionary *incrusion = @{
-                                @"IncursionEventID" : @"guid",
-                                @"IncursionText" : @"Vehicle is inside Test Polygon",
-                                @"TextColor" : @"ff12de",
-                                @"AudioFile" : @"1.mp3"
-                                };
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:incrusion];
-    [pluginResult setKeepCallbackAsBool:TRUE];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
-//    [NSTimer scheduledTimerWithTimeInterval: 20.0
-//                                     target: self
-//                                   selector:@selector(onIncrusionEnd:)
-//                                   userInfo: nil repeats:NO];
-}
-
--(void)onIncrusionEnd:(NSTimer *)timer {
-    NSDictionary *incrusion = @{
-                                @"IncursionEventID" : @"guid",
-                                @"IncursionText" : @"Vehicle is inside Test Polygon",
-                                @"TextColor" : @"ff12de",
-                                @"AudioFile" : @"1.mp3"
-                                };
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
-    [pluginResult setKeepCallbackAsBool:TRUE];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
+    
 }
 
 -(void)initializes{
@@ -122,7 +96,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     self.gpsDataFormatter = [[GpsDataFormatters alloc] init];
     [self startLocationManagerUpdates];
     [self refresh];
-    cnt = 0;
 }
 
 #pragma mark - CoreLocation Methods
@@ -298,7 +271,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     if (self.isProcessing) {
         return;
     }
-    cnt++;
     self.isProcessing = TRUE;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
@@ -312,16 +284,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                                    double longitude =[[self.gpsDataFormatter longitudeStringFromDegree:(location.longitudeDegrees)]doubleValue];
                                    self.speed = location.speedKph;
                                    self.heading =  (int)(location.trackDeciDegrees / 10.0);
-                                   self.currentLocation = CLLocationCoordinate2DMake(latitude, longitude);
-                                   if (cnt >= 50) {
-                                       [self onIncrusion:NULL];
-                                       if (cnt >= 100) {
-                                           cnt = 0;
-                                       }
-                                   }else {
-                                       [self onIncrusionEnd:NULL];
-                                   }
-                                   
+                                   [[RIWS sharedManager]checkPointinPolygonLatitude:latitude Longitude:longitude Speed:self.speed Heading:self.heading];
                                }
                            }
                        }
@@ -329,4 +292,37 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                    });
 }
 
+#pragma mark RIWS Delegates
+-(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString *)runwayID isTargetOnRunway:(BOOL)onRunway{
+    
+    NSString *textColor = @"e9f612";
+    NSString *message = [NSString stringWithFormat:@"Vehicle is predicted to hit %@",runwayName];
+    if (onRunway) {
+        textColor = @"b20707";
+        message = [NSString stringWithFormat:@"Vehicle is inside %@",runwayName];
+    }
+    
+    NSDictionary *incrusion = @{
+                                @"IncursionEventID" : runwayID,
+                                @"IncursionText" : message,
+                                @"TextColor" : textColor,
+                                @"AudioFile" : @"1.mp3"
+                                };
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:incrusion];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
+}
+
+-(void)RunwayIncrusionRemovededFromRunway:(NSString *)runwayName RunwayID:(NSString *)runwayID{
+    if ([self.lastRemovedID isEqualToString:runwayID]) {
+        return;
+    }
+    self.lastRemovedID = runwayID;
+    NSDictionary *incrusion = @{
+                                @"IncursionEventID" : runwayID
+                                };
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
+    [pluginResult setKeepCallbackAsBool:TRUE];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
+}
 @end
