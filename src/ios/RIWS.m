@@ -33,9 +33,10 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 {
     CDVPluginResult* pluginResult = nil;
     NSString* echo = @"Successfully added polygon";
-    if ([command.arguments count]<2) {
+    if ([command.arguments count]<3) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while adding polygon"];
     }else{
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];

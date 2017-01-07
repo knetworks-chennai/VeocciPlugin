@@ -1,0 +1,6 @@
+framework module RIWSFramework {
+  umbrella header "RIWSFramework.h"
+
+  export *
+  module * { export * }
+}
