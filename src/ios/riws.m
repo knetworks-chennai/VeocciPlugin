@@ -314,7 +314,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 -(void)RunwayIncrusionRemovededFromRunway:(NSString *)runwayName RunwayID:(NSString *)runwayID{
-    if ([self.lastRemovedID isEqualToString:runwayID]) {
+    if (!runwayID || [self.lastRemovedID isEqualToString:runwayID]) {
         return;
     }
     self.lastRemovedID = runwayID;
