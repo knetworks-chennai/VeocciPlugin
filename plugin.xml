@@ -16,6 +16,9 @@
         		<string>com.bad-elf.gps</string>
     		</array>
 		</config-file>
+		<config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+        <string>App will use the location services </string>
+    </config-file>
         <source-file src="src/ios/riws.m" />
         <header-file src="src/ios/GpsDataFormatters.h" />
         <source-file src="src/ios/GpsDataFormatters.m" />
