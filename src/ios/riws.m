@@ -85,6 +85,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
+    [[RIWS sharedManager]initializes];
     [self initializes];
     
 }
