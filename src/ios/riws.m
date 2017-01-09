@@ -83,6 +83,12 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
+    if (![[NSUserDefaults standardUserDefaults]stringForKey:@"isFirst"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"True" forKey:@"isFirst"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self loadPolygons];
+    }
+    
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
@@ -329,4 +335,46 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [pluginResult setKeepCallbackAsBool:TRUE];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
 }
+
+#pragma mark init predefined polygons
+
+-(void)loadPolygons{
+    
+    BOOL canForceReplace = false;
+    NSString *coordinates = @"-72.92690893597252,41.30645977867278,0 -72.92684150861093,41.30643110420776,0 -72.92680316438411,41.30648359755416,0 -72.92686850399156,41.30651235357643,0 -72.92690893597252,41.30645977867278,0 ";
+    NSString *polygonGuid = @"1";
+    NSString *polygonName = @"HOLD SHORT RSA 1 AT N";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.92605932891887,41.30610523352306,0 -72.92596164805151,41.30622472497294,0 -72.92674442876699,41.30656094359865,0 -72.92684356085593,41.30642954391565,0 -72.92605932891887,41.30610523352306,0 ";
+    polygonGuid = @"2";
+    polygonName = @"RSA Veoci 1";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.92628832909706,41.30749805977707,0 -72.92626522435289,41.30752638343166,0 -72.9263696833015,41.30756751964594,0 -72.92639174564724,41.30753935992261,0 -72.92628832909706,41.30749805977707,0 ";
+    polygonGuid = @"3";
+    polygonName = @"HOLD SHORT RSA 3";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.9260206131205,41.30614943462584,0 -72.9259341505182,41.30611370205123,0 -72.92587861129452,41.30618936331027,0 -72.92596065992656,41.30622480261703,0 -72.9260206131205,41.30614943462584,0 ";
+    polygonGuid = @"4";
+    polygonName = @"HOLD SHORT RSA 1 AT S";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.92677461662981,41.3070012970728,0 -72.9266728629832,41.30696397252252,0 -72.92628977363211,41.30749843374021,0 -72.92639235561154,41.30753859256003,0 -72.92677461662981,41.3070012970728,0 ";
+    polygonGuid = @"5";
+    polygonName = @"RSA Veoci 3";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.92522838436356,41.30695987856587,0 -72.9250736094253,41.30689605086667,0 -72.9249812463115,41.30702798471476,0 -72.92513365981949,41.30709453166839,0 -72.92522838436356,41.30695987856587,0 ";
+    polygonGuid = @"6";
+    polygonName = @"HOLD SHORT RSA 2";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-72.92513523249056,41.30709335182129,0 -72.92497960678955,41.30702722610935,0 -72.92450981856524,41.30768007927221,0 -72.92467420546311,41.30773751419669,0 -72.92513523249056,41.30709335182129,0 ";
+    polygonGuid = @"7";
+    polygonName = @"RSA Veoci 2";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+}
+
 @end
