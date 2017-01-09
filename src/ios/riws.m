@@ -281,8 +281,8 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                            if (location) {
                                BOOL locked = (location.gpsLockType != BE_GPS_LOCK_TYPE_OFF_OR_SEARCHING);
                                if (locked) {
-                                   double latitude =[[self.gpsDataFormatter latitudeStringFromDegree:(location.latitudeDegrees)]doubleValue];
-                                   double longitude =[[self.gpsDataFormatter longitudeStringFromDegree:(location.longitudeDegrees)]doubleValue];
+                                   double latitude =[[self.gpsDataFormatter customlatitudeStringFromDegree:(location.latitudeDegrees)]doubleValue];
+                                   double longitude =[[self.gpsDataFormatter customlongitudeStringFromDegree:(location.longitudeDegrees)]doubleValue];
                                    self.speed = location.speedKph;
                                    self.heading =  (int)(location.trackDeciDegrees / 10.0);
                                    [[RIWS sharedManager]checkPointinPolygonLatitude:latitude Longitude:longitude Speed:self.speed Heading:self.heading];

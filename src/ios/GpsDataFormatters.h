@@ -39,5 +39,7 @@
 - (NSString *) longitudeStringFromDegree: (double) degrees degreeFormat: (int) degreeFormat;
 - (NSString *) gpsLockFromLocation: (id<BEGpsLocation>) location;
 - (NSString *) stringDateFromLocation: (id<BEGpsLocation>) location;
+- (NSString *) customlatitudeStringFromDegree: (double) degrees;
+- (NSString *) customlongitudeStringFromDegree: (double) degrees;
 
 @end

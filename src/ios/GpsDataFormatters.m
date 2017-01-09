@@ -162,4 +162,53 @@
     return buffer;
 }
 
+
+//Sunil added
+- (NSString *) customformatDegree: (double) degrees direction: (NSString *) direction degreeFormat: (int) degreeFormat {
+    
+    double adegrees = fabs(degrees);
+    if (degreeFormat == 1) {
+        int idegree = adegrees;
+        double mdegree = (adegrees - idegree) * 60;
+        int iminutes = mdegree;
+        double sdegree = (mdegree - iminutes) * 60;
+        int iseconds = sdegree;
+        NSString *string = [NSString stringWithFormat: @"%d°%02d'%02d\" %@", idegree, iminutes, iseconds, direction];
+        return string;
+    } else {
+        NSNumberFormatter *formatter = self.locationFormatter;
+        // initialize if needed
+        if (formatter == nil) {
+            formatter = [NSNumberFormatter new];
+            formatter.numberStyle = NSNumberFormatterDecimalStyle;
+            formatter.maximumFractionDigits = 6;
+            formatter.minimumFractionDigits = 6;
+            self.locationFormatter = formatter;
+        }
+        NSNumber *number = [[NSNumber alloc] initWithDouble: adegrees];
+        NSString *svalue = [formatter stringFromNumber: number];
+        NSString *sign=@"";
+        if ([direction isEqualToString:@"S"] || [direction isEqualToString:@"W"]) {
+            sign=@"-";
+        }
+        NSString *string = [NSString stringWithFormat: @"%@%@", sign,svalue];
+        return string;
+    }
+}
+
+
+
+- (NSString *) customlatitudeStringFromDegree: (double) degrees {
+    NSString *direction = (degrees < 0) ? @"S" : @"N";
+    //int degreeFormat = self.unitsDegree;
+    return [self customformatDegree: degrees direction: direction degreeFormat: 0];
+}
+
+- (NSString *) customlongitudeStringFromDegree: (double) degrees {
+    NSString *direction = (degrees < 0) ? @"W" : @"E";
+    //int degreeFormat = self.unitsDegree;
+    return [self customformatDegree: degrees direction: direction degreeFormat: 0];
+}
+//Sunil added
+
 @end
