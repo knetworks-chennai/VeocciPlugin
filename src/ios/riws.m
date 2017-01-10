@@ -95,13 +95,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
     [self initializes];
-    
-    //    [NSTimer scheduledTimerWithTimeInterval:5.0
-    //                                     target:self
-    //                                   selector:@selector(simulateS2N)
-    //                                   userInfo:nil
-    //                                    repeats:NO];
-    
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(refresh)
@@ -154,12 +147,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                            [[RIWS sharedManager]checkPointinPolygonLatitude:[tLati doubleValue] Longitude:[tlongi doubleValue] Speed:10 Heading:10];
                            [NSThread sleepForTimeInterval:1.0f];
                        }
-                       
-                       //    [NSTimer scheduledTimerWithTimeInterval:10.0
-                       //                                     target:self
-                       //                                   selector:@selector(simulateN2S)
-                       //                                   userInfo:nil
-                       //                                    repeats:NO];
                    });
 }
 -(void)initializes{
@@ -168,13 +155,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[SimpleBadElfGpsManagers sharedGpsManager] start];
     self.gpsDataFormatter = [[GpsDataFormatters alloc] init];
     [self startLocationManagerUpdates];
-    //    [self refresh];
-    //    NSDictionary *incrusion = @{
-    //                                @"IncursionEventID" : @"Started initially"
-    //                                };
-    //    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
-    //    [pluginResult setKeepCallbackAsBool:TRUE];
-    //    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
 }
 
 #pragma mark - CoreLocation Methods
@@ -203,10 +183,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     {
         NSLog(@"Status Check: Location Services Denined");
     }
-    else if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized) // Used by iOS 7
-    {
-        NSLog(@"Status Check: Location Services Authorized");
-    }
     else if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways)
     {
         NSLog(@"Status Check: Location Services Always Authorized");
@@ -230,10 +206,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     else if (status == kCLAuthorizationStatusDenied)
     {
         NSLog(@"Status Changed: Location Services Denied");
-    }
-    else if (status == kCLAuthorizationStatusAuthorized) // Used by iOS 7
-    {
-        NSLog(@"Status Changed: Location Services Authorized");
     }
     else if (status == kCLAuthorizationStatusAuthorizedAlways)
     {
@@ -318,34 +290,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
  come through. Updates come through on each refresh cycle (1Hz to 10Hz)
  
  */
-
-- (void)gpsAccessory:(id<BEGpsAccessory>)accessory locationUpdated:(id<BEGpsLocation>)location {
-    //    [self refresh];
-}
-
-- (void)gpsAccessory:(id<BEGpsAccessory>)accessory satellitesUpdated:(NSArray*)satellites {
-    //    [self refresh];
-}
-
-- (void)gpsAccessory:(id<BEGpsAccessory>)accessory asciiUpdated:(NSString*)ascii {
-    //    [self refresh];
-}
-
-- (void)gpsAccessoryStatusUpdated:(id<BEGpsAccessory>)accessory {
-    //    [self refresh];
-}
-
-- (void)gpsAccessoryConnected:(id<BEGpsAccessory>)accessory {
-    
-    //[self.badElfGpsManager openAccessory:accessory]; // only needed if autoOpen not enabled on BadElfGpsManager
-    //    [self refresh];
-}
-- (void) gpsAccessoryDisconnected:(id<BEGpsAccessory>)accessory {
-    
-    //    [self refresh];
-}
-
-
 - (void) refresh {
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
@@ -406,8 +350,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                                                    @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
                                                    };
                        NSLog(@"Found : %@",incrusion);
-                       //    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:incrusion];
-                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%@",incrusion]];
+                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:incrusion];
                        [pluginResult setKeepCallbackAsBool:TRUE];
                        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId ];
                    });
@@ -420,8 +363,8 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     self.lastShownID = @"";
     self.isLastOnRunway = false;
-    //    dispatch_async(dispatch_get_main_queue(), ^(void)
-    //                   {
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+                   {
     if ( [self.lastRemovedID isEqualToString:runwayID]) {
         return;
     }
@@ -430,16 +373,10 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                                 @"IncursionEventID" : runwayID,
                                 @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
                                 };
-    //    NSDictionary *incrusion = @{
-    //                                @"IncursionEventID" : runwayID,
-    //                                @"IncursionText" : @"ttttt ttttttt",
-    //                                @"TextColor" : @"67y8hb",
-    //                                @"AudioFile" : @"1.mp3"
-    //                                };
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
     [pluginResult setKeepCallbackAsBool:TRUE];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.eventCommand.callbackId];
-    //                   });
+                       });
 }
 
 #pragma mark init predefined polygons
