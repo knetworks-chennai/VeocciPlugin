@@ -1,14 +1,14 @@
-/*
-    Copyright (C) 2016 Apple Inc. All Rights Reserved.
-    See LICENSE.txt for this sample’s licensing information
-    
-    Abstract:
-    Provides an interface for communication with an EASession. Also the delegate for the EASession input and output stream objects.
- */
+//
+//  GPSSession.m
+//  appSample
+//
+//  Created by Sunilkarthick Sivabalan on 11/01/17.
+//
+//
 
-#import "EADSessionController.h"
+#import "GPSSession.h"
 #import <RIWSFramework/RIWSFramework.h>
-@interface EADSessionController ()
+@interface GPSSession ()
 
 @property (nonatomic, strong) EASession *session;
 @property (nonatomic, strong) NSMutableData *writeData;
@@ -16,9 +16,9 @@
 
 @end
 
-NSString *EADSessionDataReceivedNotification = @"EADSessionDataReceivedNotification";
+NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotification";
 
-@implementation EADSessionController
+@implementation GPSSession
 
 #pragma mark existingcode
 - (void)initNMEAParser {
@@ -45,7 +45,7 @@ NSString *EADSessionDataReceivedNotification = @"EADSessionDataReceivedNotificat
     double longitude = nmea_ndeg2degree(infos.lon);
     double speed = infos.speed;
     double heading = infos.direction;
-     [[RIWS sharedManager]checkPointinPolygonLatitude:latitude Longitude:longitude Speed:speed Heading:heading];
+    [[RIWS sharedManager]checkPointinPolygonLatitude:latitude Longitude:longitude Speed:speed Heading:heading];
 }
 
 #pragma mark Internal
@@ -64,7 +64,7 @@ NSString *EADSessionDataReceivedNotification = @"EADSessionDataReceivedNotificat
         {
             [_writeData replaceBytesInRange:NSMakeRange(0, bytesWritten) withBytes:NULL length:0];
             NSLog(@"bytesWritten %ld", (long)bytesWritten);
-
+            
         }
     }
 }
@@ -82,29 +82,29 @@ NSString *EADSessionDataReceivedNotification = @"EADSessionDataReceivedNotificat
         [_readData appendBytes:(void *)buf length:bytesRead];
         NSLog(@"read %ld bytes from input stream", (long)bytesRead);
     }
-//     NSUInteger res = [self parseNMEA:_readData];
-   
-        // show on screen
-        NSUInteger res = [self parseNMEA:_readData];
-        if (res > 0) {
-            // found some NMEA sentences !
-            [self updateNMEAUI];
-        }
-
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:EADSessionDataReceivedNotification object:self userInfo:nil];
+    //     NSUInteger res = [self parseNMEA:_readData];
+    
+    // show on screen
+    NSUInteger res = [self parseNMEA:_readData];
+    if (res > 0) {
+        // found some NMEA sentences !
+        [self updateNMEAUI];
+    }
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:GPSSessionDataReceivedNotification object:self userInfo:nil];
 }
 
 #pragma mark Public Methods
-static EADSessionController *sessionController = nil;
-+ (EADSessionController *)sharedController
+static GPSSession *sessionController = nil;
++ (GPSSession *)sharedController
 {
     
     if (sessionController == nil) {
-        sessionController = [[EADSessionController alloc] init];
-         [sessionController initNMEAParser];
+        sessionController = [[GPSSession alloc] init];
+        [sessionController initNMEAParser];
     }
-
+    
     return sessionController;
 }
 
@@ -127,13 +127,13 @@ static EADSessionController *sessionController = nil;
 {
     [_accessory setDelegate:self];
     _session = [[EASession alloc] initWithAccessory:_accessory forProtocol:_protocolString];
-
+    
     if (_session)
     {
         [[_session inputStream] setDelegate:self];
         [[_session inputStream] scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         [[_session inputStream] open];
-
+        
         [[_session outputStream] setDelegate:self];
         [[_session outputStream] scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         [[_session outputStream] open];
@@ -142,7 +142,7 @@ static EADSessionController *sessionController = nil;
     {
         NSLog(@"creating session failed");
     }
-
+    
     return (_session != nil);
 }
 
@@ -155,9 +155,9 @@ static EADSessionController *sessionController = nil;
     [[_session outputStream] close];
     [[_session outputStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [[_session outputStream] setDelegate:nil];
-
+    
     _session = nil;
-
+    
     _writeData = nil;
     _readData = nil;
 }
@@ -168,12 +168,12 @@ static EADSessionController *sessionController = nil;
     if (_writeData == nil) {
         _writeData = [[NSMutableData alloc] init];
     }
-
+    
     [_writeData appendData:data];
     [self _writeData];
 }
 
-// high level read method 
+// high level read method
 - (NSData *)readData:(NSUInteger)bytesToRead
 {
     NSData *data = nil;
@@ -203,15 +203,12 @@ static EADSessionController *sessionController = nil;
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
     if (aStream == _session.inputStream) {
-        uint8_t buf[1024];
-        NSUInteger dataLength = 0;
         switch (eventCode) {
             case NSStreamEventNone:
                 break;
             case NSStreamEventOpenCompleted:
                 break;
             case NSStreamEventHasBytesAvailable:
-                //            [self _readData];
                 [self _readData];
                 break;
             case NSStreamEventHasSpaceAvailable:
