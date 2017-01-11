@@ -55,8 +55,10 @@
             }
         }
         if (matchFound) {
-            [[GPSSession sharedController]setupControllerForAccessory:connectedAccessory withProtocolString:protocolString];
-            [[GPSSession sharedController]openSession];
+            [[EADSessionController sharedController]setupControllerForAccessory:connectedAccessory withProtocolString:protocolString];
+            [[EADSessionController sharedController]openSession];
+//            [self.nmeaLocation setEAAccessory:connectedAccessory withProtocol:protocolString];
+//            [self.nmeaLocation openEAAccessory];
         }
         
     }
