@@ -24,7 +24,15 @@
         <source-file src="src/ios/GpsDataFormatters.m" />
         <header-file src="src/ios/SimpleBadElfGpsManagers.h" />
         <source-file src="src/ios/SimpleBadElfGpsManagers.m" />
-        <framework src="src/ios/BEAPSDK.framework"  weak="true" custom="true"/>
+        <header-file src="src/ios/BadElfListener.h" />
+        <source-file src="src/ios/BadElfListener.m" />
+        <header-file src="src/ios/EADSessionController.h" />
+        <source-file src="src/ios/EADSessionController.m" />
+        <header-file src="src/ios/NSData+hexa.h" />
+        <source-file src="src/ios/NSData+hexa.m" />
+        <header-file src="src/ios/nmeaApi.h" />
+        <source-file src="src/ios/libnmea-universal.a" />
+
         <framework src="src/ios/RIWSFramework.framework" custom="true" />
         <framework src="QuartzCore.framework" />
         <framework src="ExternalAccessory.framework" />
