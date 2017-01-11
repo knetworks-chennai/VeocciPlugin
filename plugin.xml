@@ -20,12 +20,14 @@
         <string>App will use the location services </string>
     </config-file>
         <source-file src="src/ios/riws.m" />
-        <header-file src="src/ios/GpsDataFormatters.h" />
-        <source-file src="src/ios/GpsDataFormatters.m" />
-        <header-file src="src/ios/SimpleBadElfGpsManagers.h" />
-        <source-file src="src/ios/SimpleBadElfGpsManagers.m" />
-        <source-file src="src/ios/BEAPSDK.framework" target="./" />
-        <framework src="src/ios/BEAPSDK.framework"  />
+        <header-file src="src/ios/BadElfListener.h" />
+        <source-file src="src/ios/BadElfListener.m" />
+        <header-file src="src/ios/GPSSession.h" />
+        <source-file src="src/ios/GPSSession.m" />
+        <header-file src="src/ios/NSData+hexa.h" />
+        <source-file src="src/ios/NSData+hexa.m" />
+        <header-file src="src/ios/nmeaApi.h" />
+        <source-file src="src/ios/libnmea-universal.a" framework="true" />
         <framework src="src/ios/RIWSFramework.framework" custom="true" />
         <framework src="QuartzCore.framework" />
         <framework src="ExternalAccessory.framework" />
