@@ -10,7 +10,7 @@
 #import <ExternalAccessory/EAAccessoryManager.h>
 #import <ExternalAccessory/EAAccessory.h>
 #import <ExternalAccessory/ExternalAccessory.h>
-#import "EADSessionController.h"
+#import "GPSSession.h"
 
 @interface BadElfListener : NSObject<EAAccessoryDelegate, NSStreamDelegate>
 
