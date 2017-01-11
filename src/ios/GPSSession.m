@@ -13,6 +13,10 @@
 @property (nonatomic, strong) EASession *session;
 @property (nonatomic, strong) NSMutableData *writeData;
 @property (nonatomic, strong) NSMutableData *readData;
+@property (nonatomic, assign) double latitude;
+@property (nonatomic, assign) double longitude;
+@property (nonatomic, assign) double speed;
+@property (nonatomic, assign) double heading;
 
 @end
 
@@ -42,10 +46,32 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
 
 - (void)updateGPSDataWith:(nmeaINFO)infos {
     double latitude = nmea_ndeg2degree(infos.lat);
+    if (latitude!=0) {
+        self.latitude = latitude;
+    }
     double longitude = nmea_ndeg2degree(infos.lon);
+    if (longitude!=0) {
+        self.longitude = longitude;
+    }
     double speed = infos.speed;
+    if(infos.speed){
+        self.speed = speed;
+    }
     double heading = infos.direction;
-    [[RIWS sharedManager]checkPointinPolygonLatitude:latitude Longitude:longitude Speed:speed Heading:heading];
+    if (infos.direction) {
+        self.heading = heading;
+    }
+    [[RIWS sharedManager]checkPointinPolygonLatitude:self.latitude Longitude:self.longitude Speed:self.speed Heading:self.heading];
+//    NSDictionary *incrusion = @{
+//                                @"Latitude" : [NSString stringWithFormat:@"%f",self.latitude],
+//                                @"Longitude" : [NSString stringWithFormat:@"%f",self.longitude],
+//                                @"Speed" : [NSString stringWithFormat:@"%f",self.speed],
+//                                @"Heading" : [NSString stringWithFormat:@"%f",self.heading],
+//                                @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
+//                                };
+//    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
+//    [pluginResult setKeepCallbackAsBool:TRUE];
+//    [self.plugin.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
 }
 
 #pragma mark Internal
@@ -90,7 +116,7 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
         // found some NMEA sentences !
         [self updateNMEAUI];
     }
-    
+    [_readData resetBytesInRange:NSMakeRange(0, [_readData length])];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:GPSSessionDataReceivedNotification object:self userInfo:nil];
 }
@@ -103,6 +129,11 @@ static GPSSession *sessionController = nil;
     if (sessionController == nil) {
         sessionController = [[GPSSession alloc] init];
         [sessionController initNMEAParser];
+        [NSTimer scheduledTimerWithTimeInterval:10.0
+                                         target:sessionController
+                                       selector:@selector(updateRate)
+                                       userInfo:nil
+                                        repeats:NO];
     }
     
     return sessionController;
@@ -137,6 +168,8 @@ static GPSSession *sessionController = nil;
         [[_session outputStream] setDelegate:self];
         [[_session outputStream] scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         [[_session outputStream] open];
+        
+       
     }
     else
     {
@@ -146,6 +179,21 @@ static GPSSession *sessionController = nil;
     return (_session != nil);
 }
 
+-(void)updateRate{
+    NSString *command = @"24be001108010202310a320433015b0d0a";
+    command = [command stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSMutableData *commandToSend= [[NSMutableData alloc] init];
+    unsigned char whole_byte;
+    char byte_chars[3] = {'\0','\0','\0'};
+    for (int i = 0; i < ([command length] / 2); i++) {
+        byte_chars[0] = [command characterAtIndex:i*2];
+        byte_chars[1] = [command characterAtIndex:i*2+1];
+        whole_byte = strtol(byte_chars, NULL, 16);
+        [commandToSend appendBytes:&whole_byte length:1];
+    }
+    NSLog(@"%@", commandToSend);
+    [self writeData:commandToSend];
+}
 // close the session with the accessory.
 - (void)closeSession
 {
@@ -203,13 +251,23 @@ static GPSSession *sessionController = nil;
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
     if (aStream == _session.inputStream) {
+        uint8_t buf[1024];
+        NSUInteger dataLength = 0;
         switch (eventCode) {
             case NSStreamEventNone:
                 break;
             case NSStreamEventOpenCompleted:
                 break;
             case NSStreamEventHasBytesAvailable:
-                [self _readData];
+//                [self _readData];
+                dataLength = [_session.inputStream read:buf maxLength:1024];
+                if (dataLength) {
+                    NSData *data = [NSData dataWithBytes:buf length:dataLength];
+                    NSUInteger res = [self parseNMEA:data];
+                    if (res > 0) {
+                        [self updateNMEAUI];
+                    }
+                }
                 break;
             case NSStreamEventHasSpaceAvailable:
                 [self _writeData];

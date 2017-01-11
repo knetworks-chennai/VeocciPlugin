@@ -92,12 +92,15 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
+//    [[GPSSession sharedController]setPlugin:self];
+//    [[GPSSession sharedController]setCommand:command];
     [[BadElfListener sharedController]initConnectedDevices];
-    //    [NSTimer scheduledTimerWithTimeInterval:1.0
-    //                                     target:self
-    //                                   selector:@selector(refresh)
-    //                                   userInfo:nil
-    //                                    repeats:YES];
+    
+//        [NSTimer scheduledTimerWithTimeInterval:1.0
+//                                         target:self
+//                                       selector:@selector(simulateN2S)
+//                                       userInfo:nil
+//                                        repeats:NO];
     
 }
 -(void)simulateN2S{
@@ -106,6 +109,9 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                        NSString *n2s = @"-77.42150244187999,39.0228742919202,0 -77.42160484620246,39.02286974297433,0 -77.42163045178441,39.02286861030525,0 -77.42167128650239,39.02286680752272,0 -77.42172577689561,39.02286440268998,0 -77.42177441809552,39.02286225168715,0 -77.42181744387666,39.02286188727877,0 -77.42188240628222,39.02285895533722,0 -77.42193394321212,39.02285662762361,0 -77.42198244857924,39.02285725277748,0 -77.4220365027393,39.02285472900995,0 -77.42210824924604,39.02285137438871,0 -77.42218808824009,39.0228451588434,0 -77.42222631547716,39.02284343162182,0 -77.42226028845938,39.02284190041315,0 -77.42229674760891,39.02284025685182,0 -77.42231627922803,39.02283937568538,0 -77.42235711831155,39.02283422403918,0 -77.42238249173364,39.02283530263501,0 -77.42241659336298,39.02283167846699,0 -77.4224617339413,39.02282875259296,0 -77.42248258605186,39.02282587642751,0 -77.42249139371371,39.02282552325049,0 ";
                        
                        NSArray* tArr = [n2s componentsSeparatedByString:@" "];
+                       for (; ; ) {
+                           
+                       
                        for (int i =0; i < [tArr count]; i++) {
                            NSArray *ttArr= [[tArr objectAtIndex:i]componentsSeparatedByString:@","];
                            //        if (i==8) {
@@ -117,14 +123,15 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                            NSString *tlongi = [ttArr objectAtIndex:0];
                            NSString *tLati = [ttArr objectAtIndex:1];
                            [[RIWS sharedManager]checkPointinPolygonLatitude:[tLati doubleValue] Longitude:[tlongi doubleValue] Speed:10 Heading:10];
-                           [NSThread sleepForTimeInterval:1.0f];
+//                           [NSThread sleepForTimeInterval:1.0f];
+                       }
                        }
                        
-                       [NSTimer scheduledTimerWithTimeInterval:10.0
-                                                        target:self
-                                                      selector:@selector(simulateS2N)
-                                                      userInfo:nil
-                                                       repeats:NO];
+//                       [NSTimer scheduledTimerWithTimeInterval:10.0
+//                                                        target:self
+//                                                      selector:@selector(simulateS2N)
+//                                                      userInfo:nil
+//                                                       repeats:NO];
                    });
 }
 -(void)simulateS2N{
@@ -175,7 +182,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
-                       
+    
                        NSDictionary *incrusion = @{
                                                    @"IncursionEventID" : runwayID,
                                                    @"IncursionText" : message,

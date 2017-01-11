@@ -10,6 +10,7 @@
 @import ExternalAccessory;
 #import "NSData+hexa.h"
 #import "nmeaApi.h"
+//#import <Cordova/CDV.h>
 
 extern NSString *GPSSessionDataReceivedNotification;
 @interface GPSSession : NSObject<EAAccessoryDelegate, NSStreamDelegate>
@@ -31,5 +32,7 @@ extern NSString *GPSSessionDataReceivedNotification;
 
 @property (nonatomic, readonly) EAAccessory *accessory;
 @property (nonatomic, readonly) NSString *protocolString;
+//@property (nonatomic, retain)CDVInvokedUrlCommand *command;
+//@property (nonatomic, retain)CDVPlugin *plugin;
 
 @end
