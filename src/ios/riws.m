@@ -3,7 +3,6 @@
 #import <Cordova/CDV.h>
 #import "GpsDataFormatters.h"
 #import <RIWSFramework/RIWSFramework.h>
-#import "BadElfListener.h"
 
 
 @interface riws : CDVPlugin <SimpleBadElfGpsManagerDelegate, BEGpsAccessoryDelegate, CLLocationManagerDelegate,RIWSDelegate>{
@@ -96,11 +95,11 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
     [self initializes];
-//    [NSTimer scheduledTimerWithTimeInterval:1.0
-//                                     target:self
-//                                   selector:@selector(refresh)
-//                                   userInfo:nil
-//                                    repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:1.0
+                                     target:self
+                                   selector:@selector(refresh)
+                                   userInfo:nil
+                                    repeats:YES];
     
 }
 -(void)simulateN2S{
