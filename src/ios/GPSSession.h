@@ -32,6 +32,7 @@ extern NSString *GPSSessionDataReceivedNotification;
 
 @property (nonatomic, readonly) EAAccessory *accessory;
 @property (nonatomic, readonly) NSString *protocolString;
+@property (nonatomic, retain) NSOperationQueue *ProcessQueue;
 //@property (nonatomic, retain)CDVInvokedUrlCommand *command;
 //@property (nonatomic, retain)CDVPlugin *plugin;
 

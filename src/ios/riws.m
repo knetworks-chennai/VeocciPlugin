@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString* lastShownID;
 @property (nonatomic, assign) BOOL isLastOnRunway;
 
+
 -(void)addPolygon:(CDVInvokedUrlCommand*)command;
 -(void)removePolygon:(CDVInvokedUrlCommand*)command;
 -(void)removeAll:(CDVInvokedUrlCommand*)command;
@@ -92,6 +93,9 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
+    
+    
+    
 //    [[GPSSession sharedController]setPlugin:self];
 //    [[GPSSession sharedController]setCommand:command];
     [[BadElfListener sharedController]initConnectedDevices];

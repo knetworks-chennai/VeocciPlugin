@@ -61,6 +61,23 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
     if (infos.direction) {
         self.heading = heading;
     }
+    NSLog(@"Count : %d",(int)[[[self ProcessQueue]operations]count]);
+    if ([[self ProcessQueue]operationCount]>5) {
+        [[self ProcessQueue]cancelAllOperations];
+    }
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                            selector:@selector(ProcessCoordinates)
+                                                                              object:nil];
+    // Add the operation to the queue and let it to be executed.
+    [[self ProcessQueue] addOperation:operation];
+//    [operation release];
+//    [[self ProcessQueue] addOperationWithBlock:^{
+//        
+//    }];
+   
+}
+
+-(void)ProcessCoordinates{
     [[RIWS sharedManager]checkPointinPolygonLatitude:self.latitude Longitude:self.longitude Speed:self.speed Heading:self.heading];
 //    NSDictionary *incrusion = @{
 //                                @"Latitude" : [NSString stringWithFormat:@"%f",self.latitude],
@@ -72,8 +89,8 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
 //    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
 //    [pluginResult setKeepCallbackAsBool:TRUE];
 //    [self.plugin.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
+//    [NSThread sleepForTimeInterval:2.0f];
 }
-
 #pragma mark Internal
 
 // low level write method - write data to the accessory while there is space available and data to write
@@ -134,6 +151,9 @@ static GPSSession *sessionController = nil;
                                        selector:@selector(updateRate)
                                        userInfo:nil
                                         repeats:NO];
+        sessionController.ProcessQueue = [[NSOperationQueue alloc] init];
+        [[sessionController ProcessQueue]setMaxConcurrentOperationCount:1];
+//        [[sessionController ProcessQueue]setQualityOfService:NSQualityOfServiceBackground];
     }
     
     return sessionController;
