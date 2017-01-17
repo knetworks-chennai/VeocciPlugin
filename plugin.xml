@@ -35,6 +35,6 @@
         <framework src="CFNetwork.framework"/>
         <framework src="CoreLocation.framework" />
         <framework src="AVFoundation.framework" />
-        <hook type="after_platform_add" src="hooks/embedframework/addEmbedded.js" />
+        <hook type="after_plugin_install" src="hooks/embedframework/addEmbedded.js" />
     </platform>
 </plugin>
