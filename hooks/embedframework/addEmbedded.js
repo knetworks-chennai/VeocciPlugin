@@ -96,7 +96,7 @@ module.exports = function(context) {
 
     process.chdir('./platforms/ios');
     console.log('test');
-    console.log(projectName);
+    console.log(myProj.getFirstTarget().firstTarget.name);
     const frameworkFilesToEmbed = fromDir(pluginPathInPlatformIosDir ,'.framework', false, true);
     process.chdir('../../');
 
