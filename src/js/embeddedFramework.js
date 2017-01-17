@@ -1,6 +1,6 @@
 'use strict';
 
-const xcode = require('xcode'),
+const xcode = require('node-xcode-opifex'),
     fs = require('fs'),
     path = require('path');
 
