@@ -19,6 +19,8 @@
 @property (nonatomic, retain) NSString* lastShownID;
 @property (nonatomic, assign) BOOL isLastOnRunway;
 
+@property (nonatomic, retain) NSMutableArray* parentArray;
+@property (nonatomic, retain) NSMutableArray* childArray;
 
 -(void)addPolygon:(CDVInvokedUrlCommand*)command;
 -(void)removePolygon:(CDVInvokedUrlCommand*)command;
@@ -82,13 +84,21 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
-
+-(void)initGrouping{
+    self.parentArray =  [[NSMutableArray alloc] initWithObjects: @"RUNWAY 10R/28L", @"RUNWAY 10L/28R", @"RUNWAY 3/21", @"ILS CRITICAL AREAS", nil];
+    self.childArray = [[NSMutableArray alloc]init];
+    [self.childArray addObject:[@"RSA RUNWAY 10R/28L,HOLD SHORT LINE 10R AT B1, HOLD SHORT LINE 10R/28L AT B2, HOLD SHORT LINE 10R/28L AT E (NORTH), HOLD SHORT LINE 10R/28L AT B3, HOLD SHORT LINE 10R/28L AT B4, HOLD SHORT LINE 10R/28L AT B5, HOLD SHORT LINE 10R/28L AT B6, HOLD SHORT LINE 10R/28L AT B8, HOLD SHORT LINE 10R/28L AT C8, HOLD SHORT LINE 10R/28L AT C6, HOLD SHORT LINE 10R/28L AT F, HOLD SHORT LINE 10R/28L AT E (SOUTH), HOLD SHORT LINE 10R AT C1" componentsSeparatedByString@","]];
+    [self.childArray addObject:[@"RSA RWY 10L/28R, HOLD SHORT LINE 10L AT K1, HOLD SHORT LINE 10L/28R AT E, RSA 10L/28R BETWEEN E AND T, HOLD SHORT LINE 10L/28R AT T, HOLD SHORT LINE 10L/28R AT A6, HOLD SHORT LINE 10L/28R AT A5, HOLD SHORT LINE 10L/28R AT A4, HOLD SHORT LINE 10L/28R AT A3, HOLD SHORT LINE 10L/28R AT A2, HOLD SHORT LINE 28R AT A1" componentsSeparatedByString@","]];
+    [self.childArray addObject:[@"RSA RWY 3/21, HOLD SHORT LINE 21 AT K (EAST), HOLD SHORT LINE 3/21 AT M (EAST), HOLD SHORT LINE 3/21 AT B (EAST), HOLD SHORT LINE 3/21 AT C (EAST), HOLD SHORT LINE 3/21 AT E4, HOLD SHORT LINE 3 AT E6, HOLD SHORT LINE 3/21 AT G, HOLD SHORT LINE 3/21 AT C (WEST), HOLD SHORT LINE 3/21 AT B (WEST), HOLD SHORT 3/21 AT M (WEST), HOLD SHORT LINE 3/21 AT H, HOLD SHORT LINE 21 AT K (WEST)" componentsSeparatedByString@","]];
+    [self.childArray addObject:[@"HOLD SHORT ILS GS 28L AT C, ILS GS AREA 28R, ILS GS AREA 10L, ILS GS AREA 28L, ILS GS AREA 10R, HOLD SHORT ILS GS 10R @ C" componentsSeparatedByString@","]];
+}
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
     if (![[NSUserDefaults standardUserDefaults]stringForKey:@"isFirst"]) {
         [[NSUserDefaults standardUserDefaults] setObject:@"True" forKey:@"isFirst"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self loadPolygons];
     }
+    [self initGrouping];
     
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
@@ -162,6 +172,28 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 #pragma mark - GPS Accessory Delegate methods
 
 #pragma mark RIWS Delegates
+
+-(NSString*)getGroupName:(NSString*)polygon{
+    NSString *retval = @"";
+    BOOL isFound = false;
+    for (int i=0; i< [self.parentArray count]; i++) {
+        NSString *parent = [self.parentArray objectAtIndex:i];
+        NSArray *tempArray = [self.childArray objectAtIndex:i];
+        for (NSString *child in self.childArray) {
+            if ([child rangeOfString:polygon options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+                isFound = TRUE;
+                break;
+            }
+        }
+        if (isFound) {
+            retval = parent;
+            break;
+        }
+    }
+    return retval;
+}
+
 -(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString *)runwayID isTargetOnRunway:(BOOL)onRunway{
     BOOL toSend = FALSE;
     if (![self.lastShownID isEqualToString:runwayID]) {
@@ -179,6 +211,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     self.lastRemovedID = @"";
     NSString *textColor = @"e9f612";
+    NSString *groupName = [self getGroupName:runwayName];
     NSString *message = [NSString stringWithFormat:@"Vehicle is predicted to hit %@",runwayName];
     if (onRunway) {
         textColor = @"b20707";
@@ -192,6 +225,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                                                    @"IncursionText" : message,
                                                    @"TextColor" : textColor,
                                                    @"AudioFile" : @"1.mp3",
+                                                   @"GroupName" : GroupName,
                                                    @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
                                                    };
                        NSLog(@"Found : %@",incrusion);
