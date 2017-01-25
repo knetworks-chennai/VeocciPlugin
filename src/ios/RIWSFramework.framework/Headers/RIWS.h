@@ -28,6 +28,8 @@
 @property (nonatomic, retain) NSString* currentPolygonName;
 @property (nonatomic, retain) NSString* currentPolygonGuid;
 @property (nonatomic, strong) AVAudioPlayer *currentaudioPlayer;
+@property (nonatomic, strong) AVAudioPlayer *riwsaudioPlayer;
+@property (nonatomic, strong) AVAudioPlayer *holdshortaudioPlayer;
 @property (nonatomic, assign) BOOL isHazardArea;
 @property (nonatomic, assign) BOOL onRunway;
 @property (nonatomic, retain) NSMutableArray *polygons;
