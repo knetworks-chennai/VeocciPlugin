@@ -85,7 +85,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 -(void)initGrouping{
-    self.parentArray =  [[NSMutableArray alloc] initWithObjects: @"RUNWAY 10R/28L", @"RUNWAY 10L/28R", @"RUNWAY 3/21", @"ILS CRITICAL AREAS", nil];
+    self.parentArray =  [[NSMutableArray alloc] initWithObjects: @"PDX01", @"PDX02", @"PDX03", @"PDX04", nil];
     self.childArray = [[NSMutableArray alloc]init];
     [self.childArray addObject:[@"RSA RUNWAY 10R/28L,HOLD SHORT LINE 10R AT B1, HOLD SHORT LINE 10R/28L AT B2, HOLD SHORT LINE 10R/28L AT E (NORTH), HOLD SHORT LINE 10R/28L AT B3, HOLD SHORT LINE 10R/28L AT B4, HOLD SHORT LINE 10R/28L AT B5, HOLD SHORT LINE 10R/28L AT B6, HOLD SHORT LINE 10R/28L AT B8, HOLD SHORT LINE 10R/28L AT C8, HOLD SHORT LINE 10R/28L AT C6, HOLD SHORT LINE 10R/28L AT F, HOLD SHORT LINE 10R/28L AT E (SOUTH), HOLD SHORT LINE 10R AT C1" componentsSeparatedByString:@","]];
     [self.childArray addObject:[@"RSA RWY 10L/28R, HOLD SHORT LINE 10L AT K1, HOLD SHORT LINE 10L/28R AT E, RSA 10L/28R BETWEEN E AND T, HOLD SHORT LINE 10L/28R AT T, HOLD SHORT LINE 10L/28R AT A6, HOLD SHORT LINE 10L/28R AT A5, HOLD SHORT LINE 10L/28R AT A4, HOLD SHORT LINE 10L/28R AT A3, HOLD SHORT LINE 10L/28R AT A2, HOLD SHORT LINE 28R AT A1" componentsSeparatedByString:@","]];
