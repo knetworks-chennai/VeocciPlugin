@@ -91,7 +91,7 @@ module.exports = function(context) {
     //var projectName = myProj.getFirstTarget().firstTarget.name.substr(1);
     var projectName = myProj.getFirstTarget().firstTarget.name;
     // projectName = projectName.substr(1, projectName.length-2); //Removing the char " at beginning and the end.
-    projectName = projectName.replace('"', '');
+    projectName = projectName.replace(/"/g, '');
 
     const groupName = 'Embed Frameworks ' + context.opts.plugin.id;
     const pluginPathInPlatformIosDir = projectName + '/Plugins/' + context.opts.plugin.id;
