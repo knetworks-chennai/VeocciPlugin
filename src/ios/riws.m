@@ -525,6 +525,49 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     
     //PDX
     
+    
+    //Test Area Polygons
+    
+    coordinates = @"-84.43099155700767,33.64750627984748,0 -84.4309255441916,33.64757267628729,0 -84.43135369896308,33.64778809655347,0 -84.43176531098209,33.64757265238111,0 -84.43169805323389,33.64750630173182,0 -84.43134492338479,33.64769275391303,0 -84.43099155700767,33.64750627984748,0 ";
+    polygonGuid = @"64";
+    polygonName = @"Test Runway";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    
+    coordinates = @"-77.61644592929922,38.81987027802619,0 -77.61663869047862,38.81991122644997,0 -77.61673982134874,38.8195310469888,0 -77.61654776571432,38.81950437671276,0 -77.61644592929922,38.81987027802619,0 ";
+    polygonGuid = @"65";
+    polygonName = @"Vish Home";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    
+    coordinates = @"-77.61632729921553,38.82026654554055,0 -77.61608412373033,38.82021751716387,0 -77.61603536626623,38.82038807795139,0 -77.6163120260053,38.82042823412356,0 -77.61632729921553,38.82026654554055,0 ";
+    polygonGuid = @"66";
+    polygonName = @"Vish Actual Home";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-77.486023146267,39.0691445740366,0 -77.48603878061161,39.06898259451713,0 -77.48593872618392,39.06891857498337,0 -77.48597702588474,39.06830693932571,0 -77.48570292171772,39.06829446351423,0 -77.48566881709341,39.06889164495146,0 -77.48558039695317,39.06902896095986,0 -77.48558770613522,39.06912220285323,0 -77.486023146267,39.0691445740366,0 ";
+    polygonGuid = @"67";
+    polygonName = @"TEST RSA ILS SA";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    
+    coordinates = @"-77.48612740632728,39.06911939522435,0 -77.48614355333713,39.06898565294091,0 -77.48604077898466,39.06898208933311,0 -77.48602654760288,39.06913176370202,0 -77.48612740632728,39.06911939522435,0  ";
+    polygonGuid = @"68";
+    polygonName = @"HOLD SHORT LINE - INDMEX - AT  - TEST";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    
+    coordinates = @"-77.42229456292533,39.02275638471243,0 -77.42184158498611,39.02276636101656,0 -77.42186567400647,39.02294373290463,0 -77.42233312516014,39.02292131725324,0 -77.42229456292533,39.02275638471243,0 ";
+    polygonGuid = @"69";
+    polygonName = @"TerragoOffice";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    
+    coordinates = @"76.95000131514489,11.02157634197544,0 76.95183032085941,11.0220645043448,0 76.95161697260122,11.02333792656345,0 76.94970297682437,11.02307074099046,0 76.95000131514489,11.02157634197544,0  ";
+    polygonGuid = @"70";
+    polygonName = @"MyHome";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
 }
 
 @end
