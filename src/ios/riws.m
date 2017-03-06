@@ -569,6 +569,10 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     polygonName = @"MyHome";
     [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
     
+    coordinates = @"76.95072301447094,11.00469919188415,0 76.95217015808014,11.00481413749866,0 76.95192896991979,11.00616738796572,0 76.95059453863988,11.00602824241446,0 76.95072301447094,11.00469919188415,0 ";
+    polygonGuid = @"71";
+    polygonName = @"CBE Office";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
 }
 
 @end
