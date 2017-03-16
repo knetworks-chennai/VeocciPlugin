@@ -11,6 +11,7 @@
 #import <ExternalAccessory/EAAccessory.h>
 #import <ExternalAccessory/ExternalAccessory.h>
 #import "GPSSession.h"
+#import <Cordova/CDV.h>
 
 @interface BadElfListener : NSObject<EAAccessoryDelegate, NSStreamDelegate>
 
@@ -20,4 +21,6 @@
 
 @property(nonatomic,retain)NSArray *supportedProtocolsStrings;
 @property(nonatomic,retain)NSMutableArray* accessoryList;
+@property(nonatomic,retain)CDVInvokedUrlCommand* command;
+@property (nonatomic, weak) id <CDVCommandDelegate> commandDelegate;
 @end

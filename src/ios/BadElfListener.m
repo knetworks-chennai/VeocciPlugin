@@ -10,7 +10,7 @@
 
 @implementation BadElfListener
 
- static BadElfListener *sessionController = nil;
+static BadElfListener *sessionController = nil;
 
 + (BadElfListener *)sharedController
 {
@@ -23,6 +23,7 @@
             NSBundle *mainBundle = [NSBundle mainBundle];
             sessionController.supportedProtocolsStrings = [mainBundle objectForInfoDictionaryKey:@"UISupportedExternalAccessoryProtocols"];
             [[NSNotificationCenter defaultCenter] addObserver:sessionController selector:@selector(_accessoryDidConnect:) name:EAAccessoryDidConnectNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:sessionController selector:@selector(_accessoryDidDisConnect:) name:EAAccessoryDidDisconnectNotification object:nil];
             [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         }
         
@@ -40,6 +41,28 @@
     EAAccessory *connectedAccessory = [[notification userInfo] objectForKey:EAAccessoryKey];
     [self initSessionfor:connectedAccessory];
 }
+
+- (void)_accessoryDidDisConnect:(NSNotification *)notification {
+    [[GPSSession sharedController]closeSession];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+                   {
+                       for (int i=0; i < 72; i++) {
+                           NSDictionary *incrusion = @{
+                                                       @"IncursionEventID" : [NSString stringWithFormat:@"%d",i],
+                                                       @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
+                                                       };
+                           CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
+                           [pluginResult setKeepCallbackAsBool:TRUE];
+                           [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
+                       }
+                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@""];
+                       [pluginResult setKeepCallbackAsBool:TRUE];
+                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
+                       
+                   });
+    
+}
+
 
 -(void)initSessionfor:(EAAccessory*)connectedAccessory{
     NSArray* protocolStrings = [connectedAccessory protocolStrings];
@@ -60,12 +83,12 @@
         }
         
     }
-
+    
 }
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EAAccessoryDidConnectNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:EAAccessoryDidDisconnectNotification object:nil];
 }
 
 

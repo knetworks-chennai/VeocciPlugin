@@ -106,15 +106,16 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     
     
     
-//    [[GPSSession sharedController]setPlugin:self];
-//    [[GPSSession sharedController]setCommand:command];
+    //    [[GPSSession sharedController]setPlugin:self];
+    //    [[GPSSession sharedController]setCommand:command];
     [[BadElfListener sharedController]initConnectedDevices];
-    
-//        [NSTimer scheduledTimerWithTimeInterval:1.0
-//                                         target:self
-//                                       selector:@selector(simulateN2S)
-//                                       userInfo:nil
-//                                        repeats:NO];
+    [[BadElfListener sharedController]setCommand:command];
+    [[BadElfListener sharedController]setCommandDelegate:self.commandDelegate];
+    //        [NSTimer scheduledTimerWithTimeInterval:1.0
+    //                                         target:self
+    //                                       selector:@selector(simulateN2S)
+    //                                       userInfo:nil
+    //                                        repeats:NO];
     
 }
 -(void)simulateN2S{
@@ -125,27 +126,27 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
                        NSArray* tArr = [n2s componentsSeparatedByString:@" "];
                        for (; ; ) {
                            
-                       
-                       for (int i =0; i < [tArr count]; i++) {
-                           NSArray *ttArr= [[tArr objectAtIndex:i]componentsSeparatedByString:@","];
-                           //        if (i==8) {
-                           //            break;
-                           //        }
-                           if ([ttArr count]<2) {
-                               continue;
+                           
+                           for (int i =0; i < [tArr count]; i++) {
+                               NSArray *ttArr= [[tArr objectAtIndex:i]componentsSeparatedByString:@","];
+                               //        if (i==8) {
+                               //            break;
+                               //        }
+                               if ([ttArr count]<2) {
+                                   continue;
+                               }
+                               NSString *tlongi = [ttArr objectAtIndex:0];
+                               NSString *tLati = [ttArr objectAtIndex:1];
+                               [[RIWS sharedManager]checkPointinPolygonLatitude:[tLati doubleValue] Longitude:[tlongi doubleValue] Speed:10 Heading:10];
+                               //                           [NSThread sleepForTimeInterval:1.0f];
                            }
-                           NSString *tlongi = [ttArr objectAtIndex:0];
-                           NSString *tLati = [ttArr objectAtIndex:1];
-                           [[RIWS sharedManager]checkPointinPolygonLatitude:[tLati doubleValue] Longitude:[tlongi doubleValue] Speed:10 Heading:10];
-//                           [NSThread sleepForTimeInterval:1.0f];
-                       }
                        }
                        
-//                       [NSTimer scheduledTimerWithTimeInterval:10.0
-//                                                        target:self
-//                                                      selector:@selector(simulateS2N)
-//                                                      userInfo:nil
-//                                                       repeats:NO];
+                       //                       [NSTimer scheduledTimerWithTimeInterval:10.0
+                       //                                                        target:self
+                       //                                                      selector:@selector(simulateS2N)
+                       //                                                      userInfo:nil
+                       //                                                       repeats:NO];
                    });
 }
 -(void)simulateS2N{
@@ -219,7 +220,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
-    
+                       
                        NSDictionary *incrusion = @{
                                                    @"IncursionEventID" : runwayID,
                                                    @"IncursionText" : message,
