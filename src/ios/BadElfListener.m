@@ -22,7 +22,7 @@
             sessionController.accessoryList = [[NSMutableArray alloc] initWithArray:[[EAAccessoryManager sharedAccessoryManager] connectedAccessories]];
             NSBundle *mainBundle = [NSBundle mainBundle];
             sessionController.supportedProtocolsStrings = [mainBundle objectForInfoDictionaryKey:@"UISupportedExternalAccessoryProtocols"];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessoryDidConnect:) name:EAAccessoryDidConnectNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:sessionController selector:@selector(_accessoryDidConnect:) name:EAAccessoryDidConnectNotification object:nil];
             [[EAAccessoryManager sharedAccessoryManager] registerForLocalNotifications];
         }
         
