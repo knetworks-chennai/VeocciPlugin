@@ -32,6 +32,7 @@
 @property (nonatomic, strong) AVAudioPlayer *holdshortaudioPlayer;
 @property (nonatomic, assign) BOOL isHazardArea;
 @property (nonatomic, assign) BOOL onRunway;
+@property (nonatomic, assign) BOOL lastOnRunway;
 @property (nonatomic, retain) NSMutableArray *polygons;
 @property (nonatomic, weak) id <RIWSDelegate> delegate;
 
