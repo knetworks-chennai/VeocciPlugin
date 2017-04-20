@@ -42,5 +42,5 @@
 -(BOOL)removePolygon:(NSString*)polygonGuid;
 -(void)initializes;
 - (void)checkPointinPolygonLatitude:(double)latitude Longitude:(double)longitude Speed:(double)speedKPH Heading:(double)heading;
-
+-(void)playAudio:(BOOL)isRunway;
 @end

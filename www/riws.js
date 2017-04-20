@@ -15,3 +15,7 @@ exports.removeAll = function(success, error) {
 exports.initRIWS = function(onRunwayIncursion, onEndRunwayIncursion, error) {
     exec(onRunwayIncursion, onEndRunwayIncursion, "RIWS", "initRIWS", [error]);
 };
+
+exports.disableLayers = function(success, error, disabledpolygons) {
+	exec(success, error, "RIWS", "disableLayers", [disabledpolygons]);
+};

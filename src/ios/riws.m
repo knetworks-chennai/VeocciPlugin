@@ -21,11 +21,13 @@
 
 @property (nonatomic, retain) NSMutableArray* parentArray;
 @property (nonatomic, retain) NSMutableArray* childArray;
+@property (nonatomic, retain) NSMutableArray* disabledParentArray;
 
 -(void)addPolygon:(CDVInvokedUrlCommand*)command;
 -(void)removePolygon:(CDVInvokedUrlCommand*)command;
 -(void)removeAll:(CDVInvokedUrlCommand*)command;
 -(void)initRIWS:(CDVInvokedUrlCommand*)command;
+-(void)disableLayers:(CDVInvokedUrlCommand*)command;
 @end
 
 @implementation riws
@@ -84,6 +86,20 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
+- (void)disableLayers:(CDVInvokedUrlCommand*)command
+{
+    CDVPluginResult* pluginResult = nil;
+    NSString* echo = @"Successfully disabled polygon";
+    if ([command.arguments count]<1) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while disabling polygon"];
+    }else{
+        NSString *disabledPoly = [command.arguments objectAtIndex:0];
+        self.disabledParentArray = [disabledPoly componentsSeparatedByString@","];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 -(void)initGrouping{
     self.parentArray =  [[NSMutableArray alloc] initWithObjects: @"PDX01", @"PDX02", @"PDX03", @"PDX04", @"PDX05", nil];
     self.childArray = [[NSMutableArray alloc]init];
@@ -99,6 +115,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self loadPolygons];
     }
+    self.disabledParentArray = [[NSMutableArray alloc]init];
     [self initGrouping];
     
     self.eventCommand = command;
@@ -196,6 +213,15 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     return retval;
 }
 
+-(BOOL)isDisabledGroup:(NSString*)group {
+    for (NSString *grp in [self disabledParentArray]) {
+        if ([grp isEqualToString:group]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 -(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString *)runwayID isTargetOnRunway:(BOOL)onRunway{
     BOOL toSend = FALSE;
     if (![self.lastShownID isEqualToString:runwayID]) {
@@ -214,6 +240,10 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     self.lastRemovedID = @"";
     NSString *textColor = @"e9f612";
     NSString *groupName = [self getGroupName:runwayName];
+    if ([self isDisabledGroup:groupName]) {
+        return;
+    }
+    [[RIWS sharedManager]playAudio:onRunway];
     NSString *message = [NSString stringWithFormat:@"Vehicle is predicted to hit %@",runwayName];
     if (onRunway) {
         textColor = @"b20707";
