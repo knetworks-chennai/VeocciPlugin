@@ -95,10 +95,12 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Error while disabling polygon"];
     }else{
         NSString *disabledPoly = [command.arguments objectAtIndex:0];
-        self.disabledParentArray = [disabledPoly componentsSeparatedByString@","];
+        self.disabledParentArray =(NSMutableArray*) [disabledPoly componentsSeparatedByString:@","];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
 
 -(void)initGrouping{
     self.parentArray =  [[NSMutableArray alloc] initWithObjects: @"PDX01", @"PDX02", @"PDX03", @"PDX04", @"PDX05", nil];
