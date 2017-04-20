@@ -216,6 +216,9 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 -(BOOL)isDisabledGroup:(NSString*)group {
+    if ([group isEqualToString:@""]) {
+        return FALSE;
+    }
     for (NSString *grp in [self disabledParentArray]) {
         if ([grp isEqualToString:group]) {
             return TRUE;
