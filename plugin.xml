@@ -5,6 +5,9 @@
     <js-module name="riws" src="www/riws.js">
         <clobbers target="riws" />
     </js-module>
+    <engines>
+      <engine name="cordova" version=">=3.1.0" /><!-- Needs cordova/urlutil -->
+    </engines>
     <platform name="ios">
         <config-file parent="/*" target="config.xml">
             <feature name="riws">
