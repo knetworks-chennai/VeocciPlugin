@@ -2,12 +2,13 @@
 <plugin id="com.indmexaviation.riws" version="1.0.11" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>RIWS</name>
     <DESCRIPTION>RIWS Plugin</DESCRIPTION>
+    <engines>
+      <engine name="cordova" version=">=3.1.0" /><!-- Needs cordova/urlutil -->
+      
+    </engines>
     <js-module name="riws" src="www/riws.js">
         <clobbers target="riws" />
     </js-module>
-    <engines>
-      <engine name="cordova" version=">=3.1.0" /><!-- Needs cordova/urlutil -->
-    </engines>
     <platform name="ios">
         <config-file parent="/widget" target="config.xml">
             <feature name="riws">
