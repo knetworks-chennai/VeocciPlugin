@@ -9,9 +9,8 @@
     <js-module name="riws" src="www/riws.js">
         <clobbers target="riws" />
     </js-module>
-    <asset src="www/riws.js" target="riws.js" />
     <platform name="ios">
-        <config-file parent="/widget" target="res/xml/config.xml">
+        <config-file parent="/*" target="config.xml">
             <feature name="riws">
                 <param name="ios-package" value="riws" />
             </feature>
