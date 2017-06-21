@@ -39,5 +39,6 @@
         <framework src="CFNetwork.framework"/>
         <framework src="CoreLocation.framework" />
         <framework src="AVFoundation.framework" />
+        <framework src="UIKit.framework" />
     </platform>
 </plugin>
