@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/RIWS.h</key>
 		<data>
-		POcOxAZy52dj31wP6ZP+nEkdL1Q=
+		W//QXi03tAUxrKncA7iawlBwaz0=
 		</data>
 		<key>Headers/RIWSFramework.h</key>
 		<data>
@@ -14,7 +14,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		SkUh85gzYdARakxAMP/xGb7fWzA=
+		OQMAzRNj25i6SL9/32GYdwiD3+8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -39,11 +39,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			POcOxAZy52dj31wP6ZP+nEkdL1Q=
+			W//QXi03tAUxrKncA7iawlBwaz0=
 			</data>
 			<key>hash2</key>
 			<data>
-			NQ5gylVPR1oZtYd1hT/rdFBXWWc84PlOCP/nnhJJFX4=
+			cmG51pZqNyW9pTWlpHew1qIh4C2bncTHjUmMUO7zDhI=
 			</data>
 		</dict>
 		<key>Headers/RIWSFramework.h</key>

@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "CRVStompClient.h"
+#import <UIKit/UIKit.h>
+
 
 @protocol RIWSDelegate <NSObject>
 -(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID isTargetOnRunway:(BOOL)onRunway;
 -(void)RunwayIncrusionRemovededFromRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID;
 @end
 
-@interface RIWS : NSObject<CRVStompClientDelegate>
+@interface RIWS : NSObject
 {
     CLLocationCoordinate2D pLeftCoordinate,pMiddleCoordinate, pRightCoordinate, pmidLeftCoordinate, pmidMiddleCoordinate, pmidRightCoordinate;
 }
@@ -38,7 +39,7 @@
 @property (nonatomic, weak) id <RIWSDelegate> delegate;
 
 //Stomp declarations
-@property (nonatomic, retain) CRVStompClient *stomp;
+
 @property (nonatomic, retain) NSString *stompServer;
 @property (nonatomic, retain) NSString *login;
 @property (nonatomic, retain) NSString *password;
