@@ -47,6 +47,7 @@
 @property (nonatomic, assign) BOOL isSSL;
 @property (nonatomic, retain) NSString *publishingTopic;
 @property (nonatomic, assign) BOOL isConnected;
+@property(nonatomic, retain) NSString *UDID;
 
 +(RIWS*)sharedManager;
 -(BOOL)addPolygons:(NSString*)Polygon forPolygonGUID:(NSString*)polygonGuid PolygonName:(NSString*)polygonName isforceReplace:(BOOL)isReplace;

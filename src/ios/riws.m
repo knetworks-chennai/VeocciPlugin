@@ -124,7 +124,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[RIWS sharedManager]setDelegate:self];
     [[RIWS sharedManager]initializes];
     
-    [[RIWS sharedManager]initStompwithServer:@"surfpad.ddns.net" Port:61626 Login:@"indmex" Password:@"9jrk4d1!" withSSL:TRUE forPublishingat:@"/topic/VeocciTopic"];
+    [[RIWS sharedManager]initStompwithServer:@"surfpad.ddns.net" Port:61626 Login:@"indmex" Password:@"9jrk4d1!" withSSL:TRUE forPublishingat:@"/topic/IndMEXADSBTopic"];
     [[RIWS sharedManager]initSTOMP];
     
     
