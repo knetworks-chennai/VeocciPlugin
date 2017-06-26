@@ -146,9 +146,6 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[BadElfListener sharedController]setCommandDelegate:self.commandDelegate];
 }
 
--(void)delegateforIsConnected:(CDVInvokedUrlCommand*)command{
-    [[BadElfListener sharedController]setIsConnectedCommand:command];
-}
 -(void)simulateN2S{
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
