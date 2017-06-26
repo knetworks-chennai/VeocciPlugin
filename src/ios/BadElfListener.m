@@ -40,10 +40,22 @@ static BadElfListener *sessionController = nil;
 - (void)_accessoryDidConnect:(NSNotification *)notification {
     EAAccessory *connectedAccessory = [[notification userInfo] objectForKey:EAAccessoryKey];
     [self initSessionfor:connectedAccessory];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+                   {
+                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:TRUE];
+                       [pluginResult setKeepCallbackAsBool:TRUE];
+                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.isConectedCommand.callbackId];
+                   });
 }
 
 - (void)_accessoryDidDisConnect:(NSNotification *)notification {
     [[GPSSession sharedController]closeSession];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+                   {
+                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:FALSE];
+                       [pluginResult setKeepCallbackAsBool:TRUE];
+                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.isConectedCommand.callbackId];
+                   });
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
                        for (int i=0; i < 72; i++) {
@@ -75,9 +87,16 @@ static BadElfListener *sessionController = nil;
             {
                 matchFound = TRUE;
                 NSLog(@"match found - protocolString %@", protocolString);
+                
             }
         }
         if (matchFound) {
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+                           {
+                               CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:TRUE];
+                               [pluginResult setKeepCallbackAsBool:TRUE];
+                               [self.commandDelegate sendPluginResult:pluginResult callbackId:self.isConectedCommand.callbackId];
+                           });
             [[GPSSession sharedController]setupControllerForAccessory:connectedAccessory withProtocolString:protocolString];
             [[GPSSession sharedController]openSession];
         }

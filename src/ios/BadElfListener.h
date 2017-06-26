@@ -23,4 +23,5 @@
 @property(nonatomic,retain)NSMutableArray* accessoryList;
 @property(nonatomic,retain)CDVInvokedUrlCommand* command;
 @property (nonatomic, weak) id <CDVCommandDelegate> commandDelegate;
+@property(nonatomic,retain)CDVInvokedUrlCommand* isConectedCommand;
 @end

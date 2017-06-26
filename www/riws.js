@@ -19,3 +19,7 @@ exports.initRIWS = function(onRunwayIncursion, onEndRunwayIncursion, error) {
 exports.disableLayers = function(success, error, disabledpolygons) {
 	exec(success, error, "RIWS", "disableLayers", [disabledpolygons]);
 };
+
+exports.isConnected = function(success, error) {
+    exec(success, error, "RIWS", "initIsConnected", []);
+};
