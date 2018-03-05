@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <UIKit/UIKit.h>
+
 
 @protocol RIWSDelegate <NSObject>
 -(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID isTargetOnRunway:(BOOL)onRunway;
@@ -28,10 +30,24 @@
 @property (nonatomic, retain) NSString* currentPolygonName;
 @property (nonatomic, retain) NSString* currentPolygonGuid;
 @property (nonatomic, strong) AVAudioPlayer *currentaudioPlayer;
+@property (nonatomic, strong) AVAudioPlayer *riwsaudioPlayer;
+@property (nonatomic, strong) AVAudioPlayer *holdshortaudioPlayer;
 @property (nonatomic, assign) BOOL isHazardArea;
 @property (nonatomic, assign) BOOL onRunway;
+@property (nonatomic, assign) BOOL lastOnRunway;
 @property (nonatomic, retain) NSMutableArray *polygons;
 @property (nonatomic, weak) id <RIWSDelegate> delegate;
+
+//Stomp declarations
+
+@property (nonatomic, retain) NSString *stompServer;
+@property (nonatomic, retain) NSString *login;
+@property (nonatomic, retain) NSString *password;
+@property (nonatomic, assign) int port;
+@property (nonatomic, assign) BOOL isSSL;
+@property (nonatomic, retain) NSString *publishingTopic;
+@property (nonatomic, assign) BOOL isConnected;
+@property(nonatomic, retain) NSString *UDID;
 
 +(RIWS*)sharedManager;
 -(BOOL)addPolygons:(NSString*)Polygon forPolygonGUID:(NSString*)polygonGuid PolygonName:(NSString*)polygonName isforceReplace:(BOOL)isReplace;
@@ -39,5 +55,10 @@
 -(BOOL)removePolygon:(NSString*)polygonGuid;
 -(void)initializes;
 - (void)checkPointinPolygonLatitude:(double)latitude Longitude:(double)longitude Speed:(double)speedKPH Heading:(double)heading;
+-(void)playAudio:(BOOL)isRunway;
+
+//Stomp usages
+-(void)initStompwithServer:(NSString*)t_server Port:(int)t_port Login:(NSString*)t_login Password:(NSString*)t_password withSSL:(BOOL)t_ssl forPublishingat:(NSString*)t_publishTopic;
+-(void)initSTOMP;
 
 @end
