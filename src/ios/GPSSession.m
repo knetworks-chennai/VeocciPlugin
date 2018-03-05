@@ -46,13 +46,13 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
 
 - (void)updateGPSDataWith:(nmeaINFO)infos {
     double latitude = nmea_ndeg2degree(infos.lat);
-    if (latitude!=0) {
+//    if (latitude!=0) {
         self.latitude = latitude;
-    }
+//    }
     double longitude = nmea_ndeg2degree(infos.lon);
-    if (longitude!=0) {
+//    if (longitude!=0) {
         self.longitude = longitude;
-    }
+//    }
     double speed = infos.speed;
     if(infos.speed){
         self.speed = speed;

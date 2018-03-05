@@ -56,22 +56,22 @@ static BadElfListener *sessionController = nil;
                        [pluginResult setKeepCallbackAsBool:TRUE];
                        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.isConectedCommand.callbackId];
                    });
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
-                   {
-                       for (int i=0; i < 72; i++) {
-                           NSDictionary *incrusion = @{
-                                                       @"IncursionEventID" : [NSString stringWithFormat:@"%d",i],
-                                                       @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
-                                                       };
-                           CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
-                           [pluginResult setKeepCallbackAsBool:TRUE];
-                           [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
-                       }
-                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@""];
-                       [pluginResult setKeepCallbackAsBool:TRUE];
-                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
-                       
-                   });
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+//                   {
+//                       for (int i=0; i < 72; i++) {
+//                           NSDictionary *incrusion = @{
+//                                                       @"IncursionEventID" : [NSString stringWithFormat:@"%d",i],
+//                                                       @"Time" : [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]
+//                                                       };
+//                           CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:incrusion];
+//                           [pluginResult setKeepCallbackAsBool:TRUE];
+//                           [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
+//                       }
+//                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@""];
+//                       [pluginResult setKeepCallbackAsBool:TRUE];
+//                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
+//                       
+//                   });
     
 }
 
