@@ -284,6 +284,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     
     if (!runwayID) {
         runwayID = @"Started initially";
+        return;
     }
     self.lastShownID = @"";
     self.isLastOnRunway = false;
