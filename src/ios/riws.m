@@ -111,6 +111,24 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [self.childArray addObject:[@"HOLD SHORT ILS GS 28L AT C,ILS GS AREA 28R,ILS GS AREA 10L,ILS GS AREA 28L,ILS GS AREA 10R,HOLD SHORT ILS GS 10R @ C" componentsSeparatedByString:@","]];
     [self.childArray addObject:[@"Test Runway, Vish Home, Vish Actual Home, TEST RSA ILS SA, HOLD SHORT LINE - INDMEX - AT  - TEST, TerragoOffice" componentsSeparatedByString:@","]];
 }
+-(void)appWillResignActive:(NSNotification*)note
+{
+    //    [[RIWS sharedManager]initializes];
+    
+    [[RIWS sharedManager]initStompwithServer:@"surfpad.ddns.net" Port:61626 Login:@"indmex" Password:@"9jrk4d1!" withSSL:TRUE forPublishingat:@"/topic/IndMEXADSBTopic"];
+    [[RIWS sharedManager]initSTOMP];
+    
+    [[BadElfListener sharedController]initConnectedDevices];
+    [[BadElfListener sharedController]setCommand:self.eventCommand];
+    [[BadElfListener sharedController]setCommandDelegate:self.commandDelegate];
+}
+-(void)appWillTerminate:(NSNotification*)note
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    
+}
+
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
     if (![[NSUserDefaults standardUserDefaults]stringForKey:@"isFirst"]) {
         [[NSUserDefaults standardUserDefaults] setObject:@"True" forKey:@"isFirst"];
@@ -119,6 +137,9 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     }
     self.disabledParentArray = [[NSMutableArray alloc]init];
     [self initGrouping];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     
     self.eventCommand = command;
     [[RIWS sharedManager]setDelegate:self];
@@ -619,6 +640,22 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     polygonGuid = @"71";
     polygonName = @"CBE Office";
     [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"80.23830031673012,13.04415732340066,0 80.23929313819632,13.04474186834263,0 80.2389130328432,13.04551955989269,0 80.23817769890717,13.04457248754413,0 80.23830031673012,13.04415732340066,0 ";
+    polygonGuid = @"72";
+    polygonName = @"CHENNAI Office";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"-81.7590813996802,26.35618966861187,0 -81.75733054143292,26.35675295925298,0 -81.76385577358133,26.36570913629655,0 -81.76564286773062,26.36388481298579,0 -81.7590813996802,26.35618966861187,0 ";
+    polygonGuid = @"73";
+    polygonName = @"Bonita Springs";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
+    
+    coordinates = @"80.23556853842298,13.04300160007594,0 80.23586162002812,13.04259365031312,0 80.23668529195916,13.04299514757364,0 80.23645560610093,13.04334450021044,0 80.23556853842298,13.04300160007594,0 ";
+    polygonGuid = @"74";
+    polygonName = @"Sangeetha";
+    [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
 }
 
 @end
+
