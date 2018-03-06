@@ -121,11 +121,26 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[BadElfListener sharedController]initConnectedDevices];
     [[BadElfListener sharedController]setCommand:self.eventCommand];
     [[BadElfListener sharedController]setCommandDelegate:self.commandDelegate];
+    
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"TestNotification" object:nil];
+    
+}
+
+- (void) receiveTestNotification:(NSNotification *) notification
+{
+    // [notification name] should always be @"TestNotification"
+    // unless you use this method for observation of other notifications
+    // as well.
+    
+    //    if ([[notification name] isEqualToString:@"TestNotification"]){
+    //        NSLog (@"Successfully received the test notification!");
+    //    }
 }
 -(void)appWillTerminate:(NSNotification*)note
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    //     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
@@ -646,7 +661,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     polygonName = @"CHENNAI Office";
     [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
     
-    coordinates = @"-81.7590813996802,26.35618966861187,0 -81.75733054143292,26.35675295925298,0 -81.76385577358133,26.36570913629655,0 -81.76564286773062,26.36388481298579,0 -81.7590813996802,26.35618966861187,0 ";
+    coordinates = @"-81.76093454999256,26.35782434268481,0 -81.76078255641768,26.35793824951624,0 -81.76131515085721,26.3585468132876,0 -81.76146591920801,26.35845696396518,0 -81.76093454999256,26.35782434268481,0 ";
     polygonGuid = @"73";
     polygonName = @"Bonita Springs";
     [[RIWS sharedManager]addPolygons:coordinates forPolygonGUID:polygonGuid PolygonName:polygonName isforceReplace:canForceReplace];
@@ -658,4 +673,3 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 @end
-
