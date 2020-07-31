@@ -72,7 +72,7 @@ NSString *GPSSessionDataReceivedNotification = @"GPSSessionDataReceivedNotificat
     [[self ProcessQueue] addOperation:operation];
 //    [operation release];
 //    [[self ProcessQueue] addOperationWithBlock:^{
-//        
+//
 //    }];
    
 }
@@ -154,6 +154,7 @@ static GPSSession *sessionController = nil;
         sessionController.ProcessQueue = [[NSOperationQueue alloc] init];
         [[sessionController ProcessQueue]setMaxConcurrentOperationCount:1];
 //        [[sessionController ProcessQueue]setQualityOfService:NSQualityOfServiceBackground];
+         [[RIWS sharedManager]checkPointinPolygonLatitude:0 Longitude:0 Speed:0 Heading:0];
     }
     
     return sessionController;
@@ -169,6 +170,8 @@ static GPSSession *sessionController = nil;
 - (void)setupControllerForAccessory:(EAAccessory *)accessory withProtocolString:(NSString *)protocolString
 {
     NSLog(@"setupControllerForAccessory entered protocolString is %@", protocolString);
+    [self sendLog:[NSString stringWithFormat:@
+    "setupControllerForAccessory entered protocolString is %@",protocolString]];
     _accessory = accessory;
     _protocolString = [protocolString copy];
 }
@@ -194,6 +197,8 @@ static GPSSession *sessionController = nil;
     else
     {
         NSLog(@"creating session failed");
+        [self sendLog:[NSString stringWithFormat:@
+        "creating session failed"]];
     }
     
     return (_session != nil);
@@ -217,6 +222,8 @@ static GPSSession *sessionController = nil;
 // close the session with the accessory.
 - (void)closeSession
 {
+    [self sendLog:[NSString stringWithFormat:@
+       "closeSession"]];
     [[_session inputStream] close];
     [[_session inputStream] removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [[_session inputStream] setDelegate:nil];
@@ -262,6 +269,9 @@ static GPSSession *sessionController = nil;
 #pragma mark EAAccessoryDelegate
 - (void)accessoryDidDisconnect:(EAAccessory *)accessory
 {
+    [[RIWS sharedManager]checkPointinPolygonLatitude:0 Longitude:0 Speed:0 Heading:0];
+    [self sendLog:[NSString stringWithFormat:@
+    "EAAccessory  DidDisconnect"]];
     // do something ...
 }
 
@@ -302,4 +312,40 @@ static GPSSession *sessionController = nil;
     }
 }
 
+
+-(void)sendLog:(NSString*)msg{
+//    NSError *error;
+
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:@"https://common.airbossclient.com/indmexLogger/logData"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+
+    [request setHTTPMethod:@"POST"];
+//    NSDictionary *mapData = [[NSDictionary alloc] initWithObjectsAndKeys: @"TEST IOS", @"name", @"IOS TYPE", @"typemap",  nil];
+//    NSData *postData = [NSJSONSerialization dataWithJSONObject:mapData options:0 error:&error];
+    NSData *postData =[msg dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:postData];
+
+
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"Error %@",error);
+    }];
+
+    [postDataTask resume];
+}
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler{
+    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
+        if([challenge.protectionSpace.host isEqualToString:@"common.airbossclient.com"]){
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
+        }
+    }
+}
 @end

@@ -40,6 +40,8 @@ static BadElfListener *sessionController = nil;
 - (void)_accessoryDidConnect:(NSNotification *)notification {
     EAAccessory *connectedAccessory = [[notification userInfo] objectForKey:EAAccessoryKey];
     [self initSessionfor:connectedAccessory];
+    [self sendLog:[NSString stringWithFormat:@
+    "BadElf DidConnect"]];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
                        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:TRUE];
@@ -50,6 +52,8 @@ static BadElfListener *sessionController = nil;
 
 - (void)_accessoryDidDisConnect:(NSNotification *)notification {
     [[GPSSession sharedController]closeSession];
+    [self sendLog:[NSString stringWithFormat:@
+    "BadElf DidDisconnect"]];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
                    {
                        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:FALSE];
@@ -70,7 +74,7 @@ static BadElfListener *sessionController = nil;
 //                       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@""];
 //                       [pluginResult setKeepCallbackAsBool:TRUE];
 //                       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.command.callbackId];
-//                       
+//
 //                   });
     
 }
@@ -78,6 +82,8 @@ static BadElfListener *sessionController = nil;
 
 -(void)initSessionfor:(EAAccessory*)connectedAccessory{
     NSArray* protocolStrings = [connectedAccessory protocolStrings];
+    [self sendLog:[NSString stringWithFormat:@
+                   "Protocols : %@",[protocolStrings componentsJoinedByString:@","]]];
     BOOL  matchFound = FALSE;
     for(NSString *protocolString in protocolStrings)
     {
@@ -110,5 +116,41 @@ static BadElfListener *sessionController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:EAAccessoryDidDisconnectNotification object:nil];
 }
 
+
+-(void)sendLog:(NSString*)msg{
+//    NSError *error;
+
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:@"https://common.airbossclient.com/indmexLogger/logData"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+
+    [request setHTTPMethod:@"POST"];
+//    NSDictionary *mapData = [[NSDictionary alloc] initWithObjectsAndKeys: @"TEST IOS", @"name", @"IOS TYPE", @"typemap",  nil];
+//    NSData *postData = [NSJSONSerialization dataWithJSONObject:mapData options:0 error:&error];
+    NSData *postData =[msg dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:postData];
+
+
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"Error %@",error);
+    }];
+
+    [postDataTask resume];
+}
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler{
+    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
+        if([challenge.protectionSpace.host isEqualToString:@"common.airbossclient.com"]){
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
+        }
+    }
+}
 
 @end

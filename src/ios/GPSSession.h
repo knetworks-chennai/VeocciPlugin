@@ -13,7 +13,7 @@
 //#import <Cordova/CDV.h>
 
 extern NSString *GPSSessionDataReceivedNotification;
-@interface GPSSession : NSObject<EAAccessoryDelegate, NSStreamDelegate>
+@interface GPSSession : NSObject<EAAccessoryDelegate, NSStreamDelegate,NSURLSessionDelegate>
 {
     nmeaINFO info;
     nmeaPARSER parser;

@@ -13,7 +13,7 @@
 #import "GPSSession.h"
 #import <Cordova/CDV.h>
 
-@interface BadElfListener : NSObject<EAAccessoryDelegate, NSStreamDelegate>
+@interface BadElfListener : NSObject<EAAccessoryDelegate, NSStreamDelegate, NSURLSessionDelegate>
 
 + (BadElfListener *)sharedController;
 
