@@ -5,7 +5,7 @@
 #import "BadElfListener.h"
 
 
-@interface riws : CDVPlugin <RIWSDelegate>{
+@interface riws : CDVPlugin <RIWSDelegate,NSURLSessionDelegate>{
     
 }
 
@@ -145,6 +145,7 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
 }
 
 -(void)initRIWS:(CDVInvokedUrlCommand*)command{
+     [self sendLog:@"initRIWS"];
     if (![[NSUserDefaults standardUserDefaults]stringForKey:@"isFirst"]) {
         [[NSUserDefaults standardUserDefaults] setObject:@"True" forKey:@"isFirst"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -169,11 +170,13 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     [[BadElfListener sharedController]initConnectedDevices];
     [[BadElfListener sharedController]setCommand:command];
     [[BadElfListener sharedController]setCommandDelegate:self.commandDelegate];
+    [self sendLog:@"BadElf Initiated"];
     //        [NSTimer scheduledTimerWithTimeInterval:1.0
     //                                         target:self
     //                                       selector:@selector(simulateN2S)
     //                                       userInfo:nil
     //                                        repeats:NO];
+     [self sendLog:@"Testing"];
     
 }
 
@@ -860,6 +863,42 @@ double RadiansToDegrees(double radians) {return radians * 180/M_PI;};
     
      /* ATHENS AIRPORT END*/
 
+}
+
+-(void)sendLog:(NSString*)msg{
+//    NSError *error;
+
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+    NSURL *url = [NSURL URLWithString:@"https://common.airbossclient.com/indmexLogger/logData"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                       timeoutInterval:60.0];
+
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+
+    [request setHTTPMethod:@"POST"];
+//    NSDictionary *mapData = [[NSDictionary alloc] initWithObjectsAndKeys: @"TEST IOS", @"name", @"IOS TYPE", @"typemap",  nil];
+//    NSData *postData = [NSJSONSerialization dataWithJSONObject:mapData options:0 error:&error];
+    NSData *postData =[msg dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:postData];
+
+
+    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"Error %@",error);
+    }];
+
+    [postDataTask resume];
+}
+
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler{
+    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
+        if([challenge.protectionSpace.host isEqualToString:@"common.airbossclient.com"]){
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
+        }
+    }
 }
 
 @end

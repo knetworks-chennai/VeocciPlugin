@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "CRVStompClient.h"
 
 
 @protocol RIWSDelegate <NSObject>
@@ -17,9 +18,10 @@
 -(void)RunwayIncrusionRemovededFromRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID;
 @end
 
-@interface RIWS : NSObject
+@interface RIWS : NSObject<CRVStompClientDelegate,NSURLSessionDelegate>
 {
     CLLocationCoordinate2D pLeftCoordinate,pMiddleCoordinate, pRightCoordinate, pmidLeftCoordinate, pmidMiddleCoordinate, pmidRightCoordinate;
+    int count;
 }
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) CLLocationCoordinate2D currentLocation;
