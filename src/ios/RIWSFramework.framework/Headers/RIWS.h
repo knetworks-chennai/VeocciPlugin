@@ -12,6 +12,7 @@
 #import <UIKit/UIKit.h>
 
 
+
 @protocol RIWSDelegate <NSObject>
 -(void)RunwayIncrusionOccurredAtRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID isTargetOnRunway:(BOOL)onRunway;
 -(void)RunwayIncrusionRemovededFromRunway:(NSString *)runwayName RunwayID:(NSString*)runwayID;
@@ -20,6 +21,7 @@
 @interface RIWS : NSObject
 {
     CLLocationCoordinate2D pLeftCoordinate,pMiddleCoordinate, pRightCoordinate, pmidLeftCoordinate, pmidMiddleCoordinate, pmidRightCoordinate;
+    int count;
 }
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) CLLocationCoordinate2D currentLocation;
