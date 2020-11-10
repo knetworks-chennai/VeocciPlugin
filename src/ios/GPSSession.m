@@ -168,6 +168,13 @@ static GPSSession *sessionController = nil;
 // initialize the accessory with the protocolString
 - (void)setupControllerForAccessory:(EAAccessory *)accessory withProtocolString:(NSString *)protocolString
 {
+    if(!protocolString){
+        return;
+    }
+    if(_session){
+    [self closeSession];
+        [self setupControllerForAccessory:nil withProtocolString:nil];
+    }
     NSLog(@"setupControllerForAccessory entered protocolString is %@", protocolString);
     _accessory = accessory;
     _protocolString = [protocolString copy];
